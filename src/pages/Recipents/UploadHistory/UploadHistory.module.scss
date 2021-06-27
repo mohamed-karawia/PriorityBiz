@@ -1,0 +1,8 @@
+.filters__container{
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    & > * {
+        margin-right: 2rem !important;
+    }
+}
