@@ -14,3 +14,13 @@ export {
     createInventory,
     editEnventory
 } from './inventory'
+
+export {
+    getUsers,
+    addUser
+} from './users'
+
+export {
+    getDiscounts,
+    addDiscount
+} from './discounts'

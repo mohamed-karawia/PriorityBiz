@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink, useLocation, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import * as actions from '../../../store/actions';
+import * as actions from '../../../store/actions/index';
 
 import classes from './Navbar.module.scss'
 
@@ -12,9 +12,9 @@ const Navbar = () => {
 
     const role = useSelector(state => state.auth.role)
 
-    const logout = () =>{
-        dispatch(actions.logout)
-        history.go('/login')
+    const logoutUser = () =>{
+        dispatch(actions.logout())
+        history.replace('/login')
     }
 
     let lowerNav = (
@@ -24,9 +24,9 @@ const Navbar = () => {
                 <li className={classes.Nav__lower__list__item}><NavLink to='/order' activeClassName={classes.activeRoute}>Orders</NavLink></li>
                 <li className={classes.Nav__lower__list__item}><NavLink to='/inventory' activeClassName={classes.activeRoute}>Inventory</NavLink></li>
                 <li className={classes.Nav__lower__list__item}><NavLink to='/recipent' activeClassName={classes.activeRoute}>Recipents</NavLink></li>
-                {role === 'superadmin' ? <li className={classes.Nav__lower__list__item}><NavLink to='/users' activeClassName={classes.activeRoute}>Users</NavLink></li> : null}
+                {role === 'superadmin' ? <li className={classes.Nav__lower__list__item}><NavLink to='/users?page=1&active=all' activeClassName={classes.activeRoute}>Users</NavLink></li> : null}
             </ul>
-            <button onClick={logout}>Logout</button>
+            <button onClick={logoutUser}>Logout</button>
         </div>
     )
 

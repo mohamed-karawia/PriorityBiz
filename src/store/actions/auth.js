@@ -1,5 +1,7 @@
-import axios from 'axios'
+import axios from 'axios';
+import { BrowserRouter } from 'react-router-dom';
 import * as actionTypes from './actionTypes';
+
 
 export const authStart = () => {
     return {
@@ -75,7 +77,7 @@ export const authCheckState = () => {
             }else {
 
                 dispatch(authSuccess(auth))
-                //dispatch(checkAuthTimeout((expirationDate.getTime() - new Date().getTime())));
+
             }
         }
     }

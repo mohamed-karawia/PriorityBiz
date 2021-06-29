@@ -20,17 +20,20 @@ const GetRecipient = () => {
     const rows = useSelector(state => state.recipients.recipients);
     const loading = useSelector(state => state.recipients.loading);
     const presentRows = [];
-    rows.forEach(row => {
-        presentRows.push({
-            id: row._id,
-            edit: 'Edit',
-            name: row.name,
-            contact: row.contact,
-            phone: row.phone,
-            email: row.email,
-            address: row.street1,
-        })
-    });
+    if(rows.length > 0){
+        rows.forEach(row => {
+            presentRows.push({
+                id: row._id,
+                edit: 'Edit',
+                name: row.name,
+                contact: row.contact,
+                phone: row.phone,
+                email: row.email,
+                address: row.street1,
+            })
+        });
+    }
+
 
     const editRecipient = (id) => {
         const filteredRecipient = rows.filter(row => row._id == id)

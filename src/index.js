@@ -5,28 +5,30 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
-import axios from 'axios';
 
 import thunk from 'redux-thunk';
 
 import inventoryReducer from './store/reducers/inventory';
 import recipientsReducer from './store/reducers/recipients';
-import authReducer from './store/reducers/auth'
+import authReducer from './store/reducers/auth';
+import usersReducer from './store/reducers/users';
+import discountsReducer from './store/reducers/discounts'
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const rootReducer = combineReducers({
   inventory: inventoryReducer,
   recipients: recipientsReducer,
-  auth: authReducer
+  auth: authReducer,
+  users: usersReducer,
+  discounts: discountsReducer
 })
 
 const store = createStore(rootReducer, composeEnhancers(
   applyMiddleware(thunk)
 ));
 
-axios.defaults.baseURL = 'https://scms-api.herokuapp.com';
-axios.defaults.headers.common['Authorization'] = `auth ${localStorage.getItem('token')}`;
+
 
 
 ReactDOM.render(

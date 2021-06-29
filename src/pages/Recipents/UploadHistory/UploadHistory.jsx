@@ -33,7 +33,7 @@ const UploadHistory = () => {
                 />
                 <Button variant="contained" color="primary" type="submit">Filter</Button>
             </form>
-            <DataTable headers={headers} data={data}></DataTable>
+            {data.length > 0 ? <DataTable headers={headers} data={data}></DataTable> : <p>Data is empty..</p>}
         </React.Fragment>
     )
 }
