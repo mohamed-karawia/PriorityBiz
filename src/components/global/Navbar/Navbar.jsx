@@ -22,8 +22,8 @@ const Navbar = () => {
             <ul className={classes.Nav__lower__list}>
                 <li className={classes.Nav__lower__list__item}><NavLink to='/' activeClassName={classes.activeRoute} exact>Home</NavLink></li>
                 <li className={classes.Nav__lower__list__item}><NavLink to='/order' activeClassName={classes.activeRoute}>Orders</NavLink></li>
-                <li className={classes.Nav__lower__list__item}><NavLink to='/inventory' activeClassName={classes.activeRoute}>Inventory</NavLink></li>
-                <li className={classes.Nav__lower__list__item}><NavLink to='/recipent' activeClassName={classes.activeRoute}>Recipents</NavLink></li>
+                <li className={classes.Nav__lower__list__item}><NavLink to='/inventory?page=1' activeClassName={classes.activeRoute}>Inventory</NavLink></li>
+                <li className={classes.Nav__lower__list__item}><NavLink to='/recipent?page=1' activeClassName={classes.activeRoute}>Recipents</NavLink></li>
                 {role === 'superadmin' ? <li className={classes.Nav__lower__list__item}><NavLink to='/users?page=1&active=all' activeClassName={classes.activeRoute}>Users</NavLink></li> : null}
             </ul>
             <button onClick={logoutUser}>Logout</button>

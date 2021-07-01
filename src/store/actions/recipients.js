@@ -39,10 +39,10 @@ export const createRecipientFailed = (error) => {
     }
 }
 
-export const getRecipients = () => {
+export const getRecipients = (page) => {
     return dispatch => {
         dispatch(fetchRecipientsStart())
-        axios.get('/recipient/add-update?page=1')
+        axios.get(`/recipient/add-update?page=${page}`)
         .then(res => {
             console.log(res)
             dispatch(fetchRecipientsSuccess(res.data.data, res.data.total))

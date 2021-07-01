@@ -104,21 +104,17 @@ const GetUsers = () => {
         <>
             <div className={classes.filter}>
                 <FormControl className={matClasses.formControl}>
-                    <InputLabel shrink id="demo-simple-select-placeholder-label-label">
-                        Age
-                    </InputLabel>
                     <Select
                         labelId="demo-simple-select-placeholder-label-label"
                         id="demo-simple-select-placeholder-label"
                         value={active}
                         onChange={handleChangeFilter}
-
                         className={matClasses.selectEmpty}
                     >
 
                         <MenuItem value={'all'}>All</MenuItem>
                         <MenuItem value={'active'}>Active</MenuItem>
-                        <MenuItem value={'inactive'}>Not Active</MenuItem>
+                        <MenuItem value={'Inactive'}>Not Active</MenuItem>
                     </Select>
                 </FormControl>
             </div>

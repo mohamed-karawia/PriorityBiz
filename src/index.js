@@ -12,7 +12,8 @@ import inventoryReducer from './store/reducers/inventory';
 import recipientsReducer from './store/reducers/recipients';
 import authReducer from './store/reducers/auth';
 import usersReducer from './store/reducers/users';
-import discountsReducer from './store/reducers/discounts'
+import discountsReducer from './store/reducers/discounts';
+import orders from './store/reducers/orders'
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -21,7 +22,8 @@ const rootReducer = combineReducers({
   recipients: recipientsReducer,
   auth: authReducer,
   users: usersReducer,
-  discounts: discountsReducer
+  discounts: discountsReducer,
+  orders: orders
 })
 
 const store = createStore(rootReducer, composeEnhancers(

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router';
 
-import GetUsers from './GetUsers/GetUsers';
 import SubNav from '../../components/global/SubNav/SubNav'
+import GetUsers from './GetUsers/GetUsers';
 import CreateUser from './CreateUser/CreateUser';
 
 

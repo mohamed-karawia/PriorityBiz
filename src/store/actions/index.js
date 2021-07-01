@@ -24,3 +24,8 @@ export {
     getDiscounts,
     addDiscount
 } from './discounts'
+
+export {
+    addInventory,
+    removeOrder
+} from './orders'

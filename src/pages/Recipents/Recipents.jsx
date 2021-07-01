@@ -13,7 +13,7 @@ const Recipents = () => {
 const route = useRouteMatch()
 
 const routes = [
-    {name: 'Recipients', path: '/'},
+    {name: 'Recipients', path: '/?page=1'},
     {name: 'Create New Recipient', path:'/add-update/null'},
     {name: 'Import Recipients', path:'/import'},
     {name: 'Upload history', path:'/history'},

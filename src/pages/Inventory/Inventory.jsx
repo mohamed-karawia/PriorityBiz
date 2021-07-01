@@ -10,7 +10,7 @@ import { NavLink, Switch, Route, useRouteMatch } from 'react-router-dom';
 const Inventory = () => {
     const route = useRouteMatch();
     const subRoutes = [
-        {name: 'Inventory', path: '/'},
+        {name: 'Inventory', path: '/?page=1'},
         {name: 'Create new inventory Item', path: '/add-update/null'}
     ]
 

@@ -2,8 +2,8 @@ import React from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 
 import SubNav from '../../components/global/SubNav/SubNav';
-import Orders from '../../components/Orders/Orders/Orders';
-import CreateNewOrder from '../../components/Orders/CreateNewOrder/CreateNewOrder';
+import GetOrders from './GetOrders/GetOrders';
+import CreateOrder from './CreateOrder/CreateOrder';
 
 import classes from './Orders.module.scss';
 
@@ -18,8 +18,8 @@ const Order = () => {
         <>
             <SubNav subRoutes={subRoutes}></SubNav>
             <Switch>
-                <Route path={`${route.path}/`} component={Orders} exact></Route>
-                <Route path={`${route.path}/add-update`} component={CreateNewOrder} exact></Route>
+                <Route path={`${route.path}/`} component={GetOrders} exact></Route>
+                <Route path={`${route.path}/add-update`} component={CreateOrder} exact></Route>
             </Switch>
         </>
     )
