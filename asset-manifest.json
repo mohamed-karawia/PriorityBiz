@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/PriorityBiz/static/css/main.945a802e.chunk.css",
+    "main.js": "/PriorityBiz/static/js/main.d622ac89.chunk.js",
+    "main.js.map": "/PriorityBiz/static/js/main.d622ac89.chunk.js.map",
+    "runtime-main.js": "/PriorityBiz/static/js/runtime-main.e1e7dcec.js",
+    "runtime-main.js.map": "/PriorityBiz/static/js/runtime-main.e1e7dcec.js.map",
+    "static/js/2.ccd2051e.chunk.js": "/PriorityBiz/static/js/2.ccd2051e.chunk.js",
+    "static/js/2.ccd2051e.chunk.js.map": "/PriorityBiz/static/js/2.ccd2051e.chunk.js.map",
+    "static/js/3.d507c6f7.chunk.js": "/PriorityBiz/static/js/3.d507c6f7.chunk.js",
+    "static/js/3.d507c6f7.chunk.js.map": "/PriorityBiz/static/js/3.d507c6f7.chunk.js.map",
+    "index.html": "/PriorityBiz/index.html",
+    "static/css/main.945a802e.chunk.css.map": "/PriorityBiz/static/css/main.945a802e.chunk.css.map",
+    "static/js/2.ccd2051e.chunk.js.LICENSE.txt": "/PriorityBiz/static/js/2.ccd2051e.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.e1e7dcec.js",
+    "static/js/2.ccd2051e.chunk.js",
+    "static/css/main.945a802e.chunk.css",
+    "static/js/main.d622ac89.chunk.js"
+  ]
+}
