@@ -1,0 +1,10 @@
+.Container {
+  padding: 1rem;
+}
+.Container table {
+  width: 35rem;
+  margin: 2rem 0;
+}
+.Container table td {
+  text-align: center;
+}

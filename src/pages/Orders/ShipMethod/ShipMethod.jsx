@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLocation } from 'react-router';
+import { useLocation, useHistory } from 'react-router';
 import classes from './ShipMethod.module.scss';
 
 import Table from '@material-ui/core/Table';
@@ -17,23 +17,62 @@ import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
+import { Redirect } from 'react-router-dom';
 
 const ShipMethod = () => {
     const location = useLocation();
+    const history = useHistory();
     console.log(location.state);
     const lineItems = location.state.lineItem;
     const shipRates = location.state.shipRayes
-    const [signature, setSignature] = useState('NO_SIGNATURE');
-    const [notify, setNotify] = useState(false)
-    const [shippingMethod, setShippingMethod] = useState([]);
+    
+    const [insuranceValue, setInsuranceValue] = useState('');
+    const [signature, setSignature] = useState('NONE');
+    const [shippingMethod, setShippingMethod] = useState([location.state.shipRayes[0].carrier, location.state.shipRayes[0].service]);
+    const [customerReference, setCustomerReference] = useState('')
+    const [notify, setNotify] = useState(false);
+    const [email, setEmail] = useState('');
+    const [company, setCompany] = useState(location.state.order.user.company);
+    const [phone, setPhone] = useState(location.state.order.user.phone);
+    const discounts = location.state.descounTable
 
-    const changeMethod = (method, carrier, service) => {
-        setShippingMethod([carrier, service])
-        console.log(shippingMethod)
+    const submitShipment = () =>{
+        const data = {
+            orderId: location.state.order._id,
+            requested_service: shippingMethod[1],
+            requested_carrier: shippingMethod[0],
+            signature_option: signature,
+            additionally_notify: email,
+            blind_company: company,
+            blind_phone: phone,
+            notify_recipient: notify,
+            insurance_value: insuranceValue
+        }
+        axios.post('/order/add-update/pick-rate', data)
+        .then(res => {
+            console.log(res)
+            history.push('/order?page=1')
+        })
+        .catch(err => {
+            console.log(err)
+        })
     }
+
+    let listRate = [];
+    shipRates.forEach(rate => {
+        discounts.forEach(discount => {
+            if(rate.carrier === discount.carrier && rate.service === discount.service){
+                listRate.push(
+                    {
+                    ...rate,
+                    value : Number(rate.list_rate*(1-discount.discount/100) + location.state.insurance_cost).toFixed(2),
+                })
+            }
+        })
+    })
     return (
-        <React.Fragment>
-            <div className={classes.RecipientDetails}>
+        <React.Fragment>           
+            {location.state ? (<><div className={classes.RecipientDetails}>
                 <h2>Recipient: {location.state.order.recipient.name} {location.state.order.recipient.contact} | {location.state.order.recipient.country}</h2>
                 <p>Total Weight: {location.state.total_weight}</p>
                 <p>Total Packages: {location.state.total_packages}</p>
@@ -55,7 +94,7 @@ const ShipMethod = () => {
                         {lineItems.length > 0 ? (
                             lineItems.map(line => (
                                 <TableRow>
-                                    <TableCell align="center">{line.item.name}</TableCell>
+                                    <TableCell align="center">{line.item.name} s</TableCell>
                                     <TableCell align="center">{line.item.number}</TableCell>
                                     <TableCell align="center">{line.item.description}</TableCell>
                                     <TableCell align="center">{line.quantity_cases}</TableCell>
@@ -69,10 +108,10 @@ const ShipMethod = () => {
             </TableContainer>
             <div className={classes.Form}>
                 <p>With FedEx or USPS Priority Mail parcel insurance for the first $100.00 is included at no extra cost. Additional insurance is available at additional cost (shown on the next page). To add additional insurance input the total declared value of this shipment. Leave blank for default insurance (if any)</p>
-                <input type="number" style={{ height: '2rem', marginTop: '1rem' }} />
+                <input type="number" style={{ height: '2rem', marginTop: '1rem' }} value={insuranceValue} onChange={e => setInsuranceValue(e.target.value)}/>
                 <FormControl component="fieldset">
-                    <RadioGroup aria-label="gender" name="gender1" value={signature} onChange={e => setSignature(e.target.value)}>
-                        <FormControlLabel value="NO_SIGNATURE" control={<Radio />} label="No Signature Required" />
+                    <RadioGroup aria-label="gender" name="shipMethod" value={signature} onChange={e => setSignature(e.target.value)}>
+                        <FormControlLabel value="NONE" control={<Radio />} label="No Signature Required" />
                         <FormControlLabel value="DIRECT_SIGNATURE" control={<Radio />} label="Direct Signature Required (anyone at delivery address)" />
                         <FormControlLabel value="ADULT_SIGNATURE" control={<Radio />} label="Adult Signature required (at delivery address, must show ID)" />
                     </RadioGroup>
@@ -92,52 +131,55 @@ const ShipMethod = () => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {shipRates.length > 0 ? (
-                                       
-                                        shipRates.map(rate => (
+
+                                    {listRate.length > 0 ? (
+                                        listRate.map(rate => (
                                             <TableRow>
-
-                                                <TableCell align="center"><FormControlLabel control={<Radio />} onClick={(e) => changeMethod(e, rate.carrier, rate.service)} /></TableCell>
-
+                                                <TableCell align="center">
+                                                    <input
+                                                        type="radio"
+                                                        checked={shippingMethod[0] == rate.carrier && shippingMethod[1] == rate.service ? true : false}
+                                                        onChange={e => setShippingMethod([rate.carrier, rate.service])}
+                                                        value={rate} />
+                                                </TableCell>
                                                 <TableCell align="center">{rate.carrier}</TableCell>
                                                 <TableCell align="center">{rate.service}</TableCell>
-                                                <TableCell align="center">{rate.service}</TableCell>
+                                                <TableCell align="center">{rate.value} { rate.retail_currency }</TableCell>
                                             </TableRow>)
-                                            )
-                                            ) : <p>lines are empty</p>}
-                                            <p>{shippingMethod}</p>
+                                        )
+                                    ) : <p>lines are empty</p>}
                                 </TableBody>
                             </Table>
                         </TableContainer>
                     </div>
-                        <div class={classes.subForm}>
-                            <label>Shipment Identifier/Reference</label>
-                            <input type="text" />
-                            <p>shipment recipient: {location.state.order.recipient.email}</p>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        name="checkedB"
-                                        color="primary"
-                                        onChange={() => setNotify(!notify)}
-                                        checked={notify}
-                                    />
-                                }
-                                label="Check to receive a copy of this shipment's notifications"
-                            />
-                            <label>Additionally Notify (email)</label>
-                            <input type="text" />
-                            <label>Ship From Company</label>
-                            <input type="text" />
-                            <label>Ship From Phone</label>
-                            <input type="text" />
-                        </div>
+                    <div class={classes.subForm}>
+                        <label>Shipment Identifier/Reference</label>
+                        <input type="text" value={customerReference} onChange={e => setCustomerReference(e.target.value)}/>
+                        <p>shipment recipient: {location.state.order.recipient.email}</p>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    name="checkedB"
+                                    color="primary"
+                                    onChange={() => setNotify(!notify)}
+                                    checked={notify}
+                                />
+                            }
+                            label="Check to receive a copy of this shipment's notifications"
+                        />
+                        <label>Additionally Notify (email)</label>
+                        <input type="text" value={email} onChange={e => setEmail(e.target.value)}/>
+                        <label>Ship From Company</label>
+                        <input type="text" value={company} onChange={e => setCompany(e.target.value)}/>
+                        <label>Ship From Phone</label>
+                        <input type="text" value={phone} onChange={e => setPhone(e.target.value)}/>
                     </div>
-                    <Button variant="contained" color="primary">Submit Shipment</Button>
-
                 </div>
+                <Button variant="contained" color="primary" onClick={submitShipment}>Submit Shipment</Button>
+
+            </div></>) : <Redirect to="/order?page=1" /> }
         </React.Fragment>
-            )
+    )
 }
 
-            export default ShipMethod;
+export default ShipMethod;

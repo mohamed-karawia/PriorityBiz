@@ -16,7 +16,7 @@ const routes = [
     {name: 'Recipients', path: '/?page=1'},
     {name: 'Create New Recipient', path:'/add-update/null'},
     {name: 'Import Recipients', path:'/import'},
-    {name: 'Upload history', path:'/history'},
+    {name: 'Upload history', path:'/history?page=1'},
 ]
 
     return (

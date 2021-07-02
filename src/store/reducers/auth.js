@@ -4,7 +4,11 @@ const initialState = {
     token: null,
     error: null,
     role: null,
-    loading: false
+    loading: false,
+    users: [],
+    username: null,
+    sudoToken: null,
+    sudoUsername: null
 }
 
 const reducer = (state = initialState, action) => {
@@ -20,6 +24,7 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 token: action.token,
                 role: action.role,
+                username: action.username,
                 loading: false
             }
         case actionTypes.AUTH_FAIL:
@@ -33,6 +38,17 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 token: null,
                 role: null
+            }
+        case actionTypes.GET_SUDO_SUCCESS:
+            return {
+                ...state,
+                users: action.data
+            }
+        case actionTypes.CHANGE_SUDO_SUCCESS:
+            return {
+                ...state,
+                sudoToken: action.data.token,
+                sudoUsername: action.data.userName
             }
         default :
             return state

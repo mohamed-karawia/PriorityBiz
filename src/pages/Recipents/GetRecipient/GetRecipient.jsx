@@ -19,7 +19,7 @@ const GetRecipient = () => {
 
     useEffect(() => {
         dispatch(actions.getRecipients(page))
-    }, [])
+    }, [page])
 
 
     const headers = ['Edit', 'Name', 'Contact', 'Phone', 'Email', 'Address']

@@ -15,6 +15,35 @@ export const getOrderAndUpdateSuccess = (data) => {
     }
 }
 
+export const getOrdersSuccess = (data) => {
+    return {
+        type: actionTypes.GET_ORDERS_SUCCESS,
+        data
+    }
+}
+
+export const getOrders = (page, filters) => {
+    return dispatch => {
+        dispatch(getOrdersStart())
+        let url = (`/order?page=${page}`)
+        if (filters) {
+            if (filters.recipient || filters.transaction || filters.tracking){
+                url = (`/order?page=${page}&recipent=${filters.recipient}&customerTransaction=${filters.transaction}&traking=${filters.tracking}`)
+            }else if (filters.startDate || filters.endDate){
+                url = (`/order?page=${page}&dataRangeStart=${filters.startDate}&dataRangeEnd=${filters.endDate}`)
+            }
+        }
+        axios.get(url)
+        .then(res => {
+            console.log(res)
+            dispatch(getOrdersSuccess(res.data))
+        })
+        .catch(err => {
+            console.log(err.response)
+        })
+    }
+}
+
 export const getOrderAndUpdate = (id) => {
     return dispatch => {
         dispatch(getOrdersStart())

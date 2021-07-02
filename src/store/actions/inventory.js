@@ -36,10 +36,10 @@ export const createInventoryFailed = (error) => {
 }
 
 
-export const getInventory = () => {
+export const getInventory = (page) => {
     return dispatch => {
         dispatch(fetchInventoryStart())
-        axios.get('/inventory/add-update?page=1')
+        axios.get(`/inventory/add-update?page=${page}`)
         .then(res => {
             console.log(res);
             dispatch(fetchInventorySuccess(res.data))

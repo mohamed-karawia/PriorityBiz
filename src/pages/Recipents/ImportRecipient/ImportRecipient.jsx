@@ -1,10 +1,13 @@
-import React from 'react'
+import React from 'react';
+import Import from '../../../components/Import/Import'
 
 const ImportRecipient = () => {
     return (
-        <div>
-            <h1>import Recipient</h1>
-        </div>
+    <Import 
+    link='/recipient/import' 
+    importLabel="Recipients File (csv)" 
+    redirectPath="/recipent?page=1"
+    redirectLabel="Go to Recipients"/>
     )
 }
 

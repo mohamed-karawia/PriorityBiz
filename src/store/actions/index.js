@@ -6,7 +6,9 @@ export {
 export {
     authUser,
     authCheckState,
-    logout
+    logout,
+    getSudo,
+    changeSudo
 } from './auth';
 
 export {
@@ -26,6 +28,8 @@ export {
 } from './discounts'
 
 export {
+    getOrders,
     addInventory,
-    removeOrder
+    removeOrder,
+    getOrderAndUpdate
 } from './orders'
