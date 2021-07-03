@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router';
+import { useLocation, useHistory } from 'react-router';
 import classes from './ShipOrder.module.scss';
 
 import Table from '@material-ui/core/Table';
@@ -28,6 +28,7 @@ const ShipOrder = () => {
     const [carrier, setCarrier] = useState('');
     const [service, setService] = useState('');
     const [tracking, setTracking] = useState('');
+    const history = useHistory();
 
     const addRows = () => {
         setShowBoxes([...showBoxes, { wight: 0 }])
@@ -74,6 +75,7 @@ const ShipOrder = () => {
         axios.post('https://scms-api.herokuapp.com/order/add-update/do-ship', data)
             .then(res => {
                 console.log(res)
+                history.push('/')
             })
             .catch(err => {
                 console.log(err.response)
@@ -86,6 +88,7 @@ const ShipOrder = () => {
             orderId: location.state.order._id,
             actual_service: service,
             actual_carrier: carrier,
+            tracking: tracking,
             box: newData
         }
         axios.post('https://scms-api.herokuapp.com/order/add-update/do-ship', data)

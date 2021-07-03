@@ -78,10 +78,12 @@ function App() {
         <Switch>
           <Route path="/order" component={Orders}></Route>
           <Route path="/inventory" component={Inventory}></Route>
-          <Route path="/recipent" component={Recipents}></Route>
+          <Route path="/recipient" component={Recipents}></Route>
           <Route path="/add-order/" component={AddOrder}></Route>
           <Route path="/ship-method/" component={ShipMethod}></Route>
           <Route path="/ship-order/" component={ShipOrder}></Route>
+          <Route path="/picking-slip/:id" component={PackingSlip}></Route>
+          <Route path="/picking-ticket/:id" component={PickingTicket}></Route>
           <Route path="/" component={Home} exact></Route>
           <Redirect to="/" />
         </Switch>
