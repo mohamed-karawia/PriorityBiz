@@ -7,7 +7,6 @@ import CreateOrder from './CreateOrder/CreateOrder';
 import ImportOrder from './ImportOrder/ImportOrder';
 import UploadHistory from './UploadHistory/UploadHistory'
 
-import classes from './Orders.module.scss';
 
 const Order = () => {
     const route = useRouteMatch();

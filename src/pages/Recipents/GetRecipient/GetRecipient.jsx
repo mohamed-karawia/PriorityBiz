@@ -42,12 +42,12 @@ const GetRecipient = () => {
     }
 
     const changePage = (event, value) => {
-        history.replace(`/users?page=${value}`)
+        history.replace(`/recipient?page=${value}`)
         setPage(value)
     }
 
     const editRecipient = (id) => {
-        const filteredRecipient = rows.filter(row => row._id == id)
+        const filteredRecipient = rows.filter(row => row._id === id)
         console.log(filteredRecipient[0])
         history.push(`${route.path}add-update/${id}`, filteredRecipient[0])
     }

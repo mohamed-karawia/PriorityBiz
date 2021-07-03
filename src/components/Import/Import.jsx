@@ -24,6 +24,11 @@ const ImportRecipient = (props) => {
         axios.post(props.link, form)
         .then(res => {
             console.log(res)
+            if(res.data.fail){
+                setError(res.data.errors[0])
+                setLoading(false)
+                return
+            }
             setLoading(false)
             setMessage('File Imported Successfully')
             setError('')

@@ -24,7 +24,6 @@ const Upload = (props) => {
     const [endDate, setEndDate] = useState(values.endDate ? values.endDate : '');
     const [data, setData] = useState([]);
     const [pages, setPages] = useState(0);
-    const [message, setMessage] = useState('')
 
     const changeStartDate = (e) => {
         if (e.target.value) {
@@ -52,7 +51,8 @@ const Upload = (props) => {
             .then(res => {
                 console.log(res)
                 setData(res.data.data)
-                setPages(Math.ceil(res.data.total) / 10)
+                setPages(Math.ceil(res.data.total / 10))
+                console.log(pages)
             })
             .catch(err => {
                 console.log(err.response)
@@ -61,9 +61,7 @@ const Upload = (props) => {
 
 
     useEffect(() => {
-        if (startDate && endDate) {
             fetchHistory();
-        }
     }, [page])
 
     const getuploads = () => {
@@ -120,7 +118,7 @@ const Upload = (props) => {
                             <TableRow>
                                 <TableCell align="center">{row.createdAt}</TableCell>
                                 <TableCell align="center">{row.user.username}</TableCell>
-                                <TableCell align="center" onClick={e => downloadFile(e, row)}><a target="_blank" href={`https://scms-api.herokuapp.com/${row.filename}`}>{row.filename}</a></TableCell>
+                                <TableCell align="center" onClick={e => downloadFile(e, row)}><a target="_blank" href={`https://scms-api.herokuapp.com/${row.filename}`} rel="noreferrer">{row.filename}</a></TableCell>
                             </TableRow>
                         )) : null}
                     </TableBody>

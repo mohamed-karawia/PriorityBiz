@@ -1,5 +1,4 @@
 import * as actionTypes from './actionTypes';
-import * as actions from './index'
 import axios from 'axios'
 
 export const getOrdersStart = () => {
@@ -65,7 +64,8 @@ export const addInventory = (data) => {
             dispatch(getOrderAndUpdate(data.orderId))
         })
         .catch(err => {
-            console.log(err)
+            console.log(err.response)
+            window.alert(err.response.data.message)
         })
     }
 }

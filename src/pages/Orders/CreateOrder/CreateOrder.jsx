@@ -27,21 +27,24 @@ const CreateOrder = () => {
     const dispatch = useDispatch();
     const history = useHistory();
 
-    useEffect(() => {
-        dispatch(actions.getRecipients())
-    }, [])
 
-    const loading = useSelector(state => state.recipients.loading);
     const recipients = useSelector(state => state.recipients.recipients)
+    const pages = useSelector(state => Math.ceil(state.recipients.total / 10))
     const [reci, setReci] = useState(null);
+    const [page, setPage] = useState(1)
 
     const handleChangeReci = (e) => {
         setReci(recipients.find(p => p._id === e.target.value))
 
     }
 
+    useEffect(() => {
+        dispatch(actions.getRecipients(page))
+    }, [page])
+
+
     const goCreateRec = () => {
-        history.push('/recipent/add-update/null')
+        history.push('/recipient/add-update/null')
     }
 
     const goOrders = (id) => {
@@ -50,16 +53,16 @@ const CreateOrder = () => {
         axios.post('/order/add-update', {
             recipientId: id
         })
-        .then(res => {
-            console.log(res)
-            history.push('/add-order', {
-                ...reci,
-                orderId: res.data.data._id
+            .then(res => {
+                console.log(res)
+                history.push('/add-order', {
+                    ...reci,
+                    orderId: res.data.data._id
+                })
             })
-        })
-        .catch(err => {
-            console.log(err)
-        })
+            .catch(err => {
+                console.log(err)
+            })
     }
 
 
@@ -69,19 +72,35 @@ const CreateOrder = () => {
             <div className={classes.Recipient}>
                 <p>Or select existing recipient</p>
                 <h2>Recipient</h2>
-                <FormControl className={matClasses.formControl}>
-                    <InputLabel id="demo-simple-select-label">Recipient</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-placeholder-label-label"
-                        id="demo-simple-select-placeholder-label"
-                        onChange={handleChangeReci}
-                        className={matClasses.selectEmpty}
-                    >
-                        {recipients.map((reci => (
-                            <MenuItem key={reci._id} value={reci._id}>{reci.name}</MenuItem>
-                        )))}
-                    </Select>
-                </FormControl>
+                <div className={classes.menus}>
+                    <FormControl className={matClasses.formControl}>
+                        <InputLabel id="demo-simple-select-label">Recipient</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-placeholder-label-label"
+                            id="demo-simple-select-placeholder-label"
+                            onChange={handleChangeReci}
+                            className={matClasses.selectEmpty}
+                        >
+                            {recipients.map((reci => (
+                                <MenuItem key={reci._id} value={reci._id}>{reci.name}</MenuItem>
+                            )))}
+                        </Select>
+                    </FormControl>
+                    <FormControl className={matClasses.formControl}>
+                        <InputLabel id="demo-simple-select-label">Pages</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-placeholder-label-label"
+                            id="demo-simple-select-placeholder-label"
+                            onChange={e => setPage(Number(e.target.value))}
+                            className={matClasses.selectEmpty}
+                        >
+                            {[...Array(pages)].map(((page, index) => (
+                                <MenuItem key={index} value={index+1}>{index+1}</MenuItem>
+                            )))}
+                        </Select>
+                    </FormControl>
+                </div>
+
                 {reci ? (<div className={classes.Details}>
                     <div className={classes.Details__box}>
                         <p>Name: <span>{reci.name}</span></p>

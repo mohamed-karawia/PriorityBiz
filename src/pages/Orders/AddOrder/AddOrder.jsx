@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useHistory, Redirect } from 'react-router';
 import * as actions from '../../../store/actions/index';
 import { useDispatch, useSelector } from 'react-redux';
 import classes from './AddOrder.module.scss'
 
+import Spinner from '../../../components/global/Spinner/Spinner';
 import LargeSpinner from '../../../components/global/LargeSpinner/LargeSpinner';
 
 import Table from '@material-ui/core/Table';
@@ -14,17 +15,22 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
+import Pagination from '@material-ui/lab/Pagination';
 import axios from 'axios';
+
 
 const AddOrder = () => {
     const location = useLocation();
     const history = useHistory();
     const dispatch = useDispatch();
+    const pages = useSelector(state => Math.ceil(state.inventory.total/10))
+    const [page, setPage] = useState(1);
+    const [nextPageLoading, setNextPageLoading] = useState(false)
 
     useEffect(() => {
         if (location.state) {
             dispatch(actions.getOrderAndUpdate(location.state.orderId))
-            dispatch(actions.getInventory())
+            dispatch(actions.getInventory(page))
         }
     }, [])
 
@@ -81,7 +87,7 @@ const AddOrder = () => {
 
     const saveOrder = (id) => {
         newLines.map(line => {
-            if (line._id == id) {
+            if (line._id === id) {
                 const data = {
                     quantity_cases: line.quantity_cases,
                     quantity_units: line.quantity_units,
@@ -98,18 +104,31 @@ const AddOrder = () => {
     }
 
     const orderComplete = () => {
+        setNextPageLoading(true)
         axios.post('/order/add-update/select-ship-method', {
             orderId: location.state.orderId
         })
             .then(res => {
+                setNextPageLoading(false)
                 console.log(res)
-                history.push('/ship-method', res.data)
+                if(res.data.shipRayes.length < 1){
+                    window.alert("Order can't be shipped (Wrong recipient info)")
+                    return
+                }else{
+                    history.push('/ship-method', res.data)
+                }
             })
             .catch(err => {
+                setNextPageLoading(false)
                 console.log(err.response.data.message)
                 window.alert(err.response.data.message)
             })
 
+    }
+
+    const changePage = (e, value) => {
+        setPage(value);
+        dispatch(actions.getInventory(page))
     }
 
     return (
@@ -158,7 +177,7 @@ const AddOrder = () => {
                         </TableBody>
                     </Table>
                 </TableContainer>)}
-                {lines.length > 0 ? <Button variant="contained" color="primary" style={{ margin: '1rem' }} onClick={orderComplete}>Order Complete</Button> : null}
+                {lines.length > 0 ? <Button variant="contained" color="primary" style={{ margin: '1rem' }} onClick={orderComplete}>{nextPageLoading ? <Spinner /> : 'Order Complete'}</Button> : null}
                 {/************************************************************************ */}
                 <h1>Add more to the order.</h1>
                 <TableContainer component={Paper}>
@@ -208,6 +227,9 @@ const AddOrder = () => {
                     </Table>
                 </TableContainer>
             </div>) : <Redirect to="/order?page=1" />}
+            {pages > 1 ? (<div className={classes.pagination}>
+                <Pagination count={pages} page={page} onChange={changePage} color="primary" />
+            </div>) : null}
         </React.Fragment>
     )
 }

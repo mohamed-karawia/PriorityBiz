@@ -14,7 +14,6 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
@@ -138,7 +137,7 @@ const ShipMethod = () => {
                                                 <TableCell align="center">
                                                     <input
                                                         type="radio"
-                                                        checked={shippingMethod[0] == rate.carrier && shippingMethod[1] == rate.service ? true : false}
+                                                        checked={shippingMethod[0] === rate.carrier && shippingMethod[1] === rate.service ? true : false}
                                                         onChange={e => setShippingMethod([rate.carrier, rate.service])}
                                                         value={rate} />
                                                 </TableCell>

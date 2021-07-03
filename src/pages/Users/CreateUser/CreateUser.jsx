@@ -16,7 +16,7 @@ const CreateUser = () => {
     const location = useLocation();
     const history = useHistory();
     const dispatch = useDispatch()
-    const newDate = new Date
+    const newDate = new Date()
 
     const [userName, setUserName] = useState(location.state ? location.state.username : '');
     const [firstName, setFirstName] = useState(location.state ? location.state.first_name : '');

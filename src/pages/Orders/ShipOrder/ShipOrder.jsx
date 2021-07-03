@@ -150,13 +150,13 @@ const ShipOrder = () => {
                                     {rate.service}<br />
                                     {
                                         (() => {
-                                            if (rate.service == 'FEDEX_EXPRESS_SAVER')
+                                            if (rate.service === 'FEDEX_EXPRESS_SAVER')
                                                 return '3rd party billing: 308754227'
                                             if (rate.service === 'FEDEX_GROUND')
                                                 return 'Bill Sender 291480179'
-                                            if (location.state.order.user.username == 'Buffalofoodproducts.com')
+                                            if (location.state.order.user.username === 'Buffalofoodproducts.com')
                                                 return '3rd party billing: 210128980'
-                                            if (rate.carrier === 'FedEx' && (location.state.order.requested_service == 'FedExMediumBox' || location.state.order.requested_service == 'FedExSmallBox' || location.state.order.requested_service == 'FedExPak' || location.state.order.requested_service == 'FedExEnvelope') && rate.custom_predefined_package)
+                                            if (rate.carrier === 'FedEx' && (location.state.order.requested_service === 'FedExMediumBox' || location.state.order.requested_service === 'FedExSmallBox' || location.state.order.requested_service === 'FedExPak' || location.state.order.requested_service === 'FedExEnvelope') && rate.custom_predefined_package)
                                                 return 'BillSender 242823303'
                                             if (rate.carrier === 'FedEx')
                                                 return '3rd party billing: 210128980'

@@ -57,7 +57,7 @@ const GetInventory = () => {
 
 
     const editEnventory = (id) => {
-        const filteredInv = rows.filter(row => row._id == id);
+        const filteredInv = rows.filter(row => row._id === id);
         const inv = filteredInv[0]
         history.push(`${route.path}add-update/${id}`, inv)
     }

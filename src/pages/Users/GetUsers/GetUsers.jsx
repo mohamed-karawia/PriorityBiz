@@ -3,13 +3,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useLocation, useHistory, useRouteMatch } from 'react-router';
 import queryString from 'query-string'
 import classes from './GetUsers.module.scss';
-import CreateUser from '../CreateUser/CreateUser';
 
 import LargeSpinner from '../../../components/global/LargeSpinner/LargeSpinner'
 import DataTable from '../../../components/global/DataTable/DataTable';
 
 import { makeStyles } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
@@ -77,7 +75,7 @@ const GetUsers = () => {
 
     const editUser = (id) => {
         console.log(id);
-        const filterdUser = rows.filter(row => row._id == id)
+        const filterdUser = rows.filter(row => row._id === id)
         console.log(filterdUser[0])
         history.push(`${route.path}add-update/${id}`, filterdUser[0])
     }

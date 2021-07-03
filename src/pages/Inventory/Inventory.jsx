@@ -6,7 +6,7 @@ import getInventory from './getInventory/getInventory';
 import CreateInventory from './CreateInventory/CreateInventory';
 import ImportInventory from './ImportInventory/ImportInventory';
 import UploadHistory from './UploadHistory/UploadHistory';
-import { NavLink, Switch, Route, useRouteMatch } from 'react-router-dom';
+import { Switch, Route, useRouteMatch } from 'react-router-dom';
 
 
 const Inventory = () => {

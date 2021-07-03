@@ -46,6 +46,12 @@ function App() {
   let routes = (
     <Switch>
       <Route path="/login" component={Auth}></Route>
+      {(() => {
+            if (!localStorage.getItem('token') || new Date(localStorage.getItem('expirationDate')) <= new Date())
+                return <Redirect to="/login" />
+            else
+                return null
+        })()}
     </Switch>
   )
   if (isAuth) {

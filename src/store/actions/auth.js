@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { BrowserRouter } from 'react-router-dom';
 import * as actionTypes from './actionTypes';
 
 
