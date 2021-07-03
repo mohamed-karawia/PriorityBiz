@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/PriorityBiz/static/css/main.945a802e.chunk.css",
-    "main.js": "/PriorityBiz/static/js/main.b663e75b.chunk.js",
-    "main.js.map": "/PriorityBiz/static/js/main.b663e75b.chunk.js.map",
+    "main.css": "/PriorityBiz/static/css/main.38e0f77a.chunk.css",
+    "main.js": "/PriorityBiz/static/js/main.bd4ea492.chunk.js",
+    "main.js.map": "/PriorityBiz/static/js/main.bd4ea492.chunk.js.map",
     "runtime-main.js": "/PriorityBiz/static/js/runtime-main.e1e7dcec.js",
     "runtime-main.js.map": "/PriorityBiz/static/js/runtime-main.e1e7dcec.js.map",
-    "static/js/2.ccd2051e.chunk.js": "/PriorityBiz/static/js/2.ccd2051e.chunk.js",
-    "static/js/2.ccd2051e.chunk.js.map": "/PriorityBiz/static/js/2.ccd2051e.chunk.js.map",
+    "static/js/2.58a16285.chunk.js": "/PriorityBiz/static/js/2.58a16285.chunk.js",
+    "static/js/2.58a16285.chunk.js.map": "/PriorityBiz/static/js/2.58a16285.chunk.js.map",
     "static/js/3.d507c6f7.chunk.js": "/PriorityBiz/static/js/3.d507c6f7.chunk.js",
     "static/js/3.d507c6f7.chunk.js.map": "/PriorityBiz/static/js/3.d507c6f7.chunk.js.map",
     "index.html": "/PriorityBiz/index.html",
-    "static/css/main.945a802e.chunk.css.map": "/PriorityBiz/static/css/main.945a802e.chunk.css.map",
-    "static/js/2.ccd2051e.chunk.js.LICENSE.txt": "/PriorityBiz/static/js/2.ccd2051e.chunk.js.LICENSE.txt"
+    "static/css/main.38e0f77a.chunk.css.map": "/PriorityBiz/static/css/main.38e0f77a.chunk.css.map",
+    "static/js/2.58a16285.chunk.js.LICENSE.txt": "/PriorityBiz/static/js/2.58a16285.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.e1e7dcec.js",
-    "static/js/2.ccd2051e.chunk.js",
-    "static/css/main.945a802e.chunk.css",
-    "static/js/main.b663e75b.chunk.js"
+    "static/js/2.58a16285.chunk.js",
+    "static/css/main.38e0f77a.chunk.css",
+    "static/js/main.bd4ea492.chunk.js"
   ]
 }
