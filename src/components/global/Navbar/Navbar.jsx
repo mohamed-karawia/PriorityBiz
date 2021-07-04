@@ -41,7 +41,7 @@ const Navbar = () => {
     return (
         <React.Fragment>
         {pick !== 1 ? <nav className={classes.Nav}>
-            <h1 className={classes.Nav__heading}>PriorityBiz Shipping (codementor)</h1>
+            <h1 className={classes.Nav__heading}>PriorityBiz Shipping</h1>
             {lowerNav}
         </nav> : null}
         </React.Fragment>
