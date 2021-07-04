@@ -25,11 +25,9 @@ export const getDiscounts = (id) => {
         dispatch(fetchDiscountsStart())
         axios.get(`/user/add-update/discounts/${id}`)
         .then(res => {
-            console.log(res);
             dispatch(fetchDiscountsSuccess(res.data.descounts))
         })
         .catch(err => {
-            console.log(err.response)
             dispatch(fetchDiscountsFailed())
         })
     }

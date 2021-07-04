@@ -1,17 +1,22 @@
+// React Imports
 import React, { useEffect, useState } from 'react';
+// Redux Imports
 import { useSelector, useDispatch } from 'react-redux';
-import { useHistory } from 'react-router';
 import * as actions from '../../../store/actions/index'
+// React- router imports
+import { useHistory } from 'react-router';
+// Styles
 import classes from './CreateOrder.module.scss';
-
+// Material UI
 import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+// Axios
 import axios from 'axios';
-
+// Material UI Styles
 const useStyles = makeStyles((theme) => ({
     formControl: {
         margin: theme.spacing(1),
@@ -23,45 +28,44 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CreateOrder = () => {
+    // Hooks consts
     const matClasses = useStyles();
     const dispatch = useDispatch();
     const history = useHistory();
-
-
-    const recipients = useSelector(state => state.recipients.recipients)
-    const pages = useSelector(state => Math.ceil(state.recipients.total / 10))
+    // State consts
     const [reci, setReci] = useState(null);
     const [page, setPage] = useState(1)
+    // Redux State getters
+    const recipients = useSelector(state => state.recipients.recipients)
+    const pages = useSelector(state => Math.ceil(state.recipients.total / 10))
+    // useEffect hook to Fetch recipients
+    useEffect(() => {
+        dispatch(actions.getRecipients(page))
+    }, [page])
+
 
     const handleChangeReci = (e) => {
         setReci(recipients.find(p => p._id === e.target.value))
 
     }
 
-    useEffect(() => {
-        dispatch(actions.getRecipients(page))
-    }, [page])
-
-
     const goCreateRec = () => {
         history.push('/recipient/add-update/null')
     }
-
+    
+    // Function to create order and save the response then navigate to next page
     const goOrders = (id) => {
-        //history.push('/add-order', reci)
-        console.log(id)
         axios.post('/order/add-update', {
             recipientId: id
         })
             .then(res => {
-                console.log(res)
                 history.push('/add-order', {
                     ...reci,
                     orderId: res.data.data._id
                 })
             })
             .catch(err => {
-                console.log(err)
+                window.alert(err.response.data.message)
             })
     }
 

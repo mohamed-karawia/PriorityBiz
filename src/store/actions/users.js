@@ -40,11 +40,10 @@ export const getUsers = (active, page) => {
         dispatch(requestStart())
         axios.get(`/user/add-update?page=${page}&active=${active}`)
         .then(res => {
-            console.log(res);
             dispatch(fetchUsersSuccess(res.data.users, res.data.total))
         })
         .catch(err => {
-            console.log(err.response);
+            window.alert(err.response.data.message);
         })
     }
 }
@@ -54,11 +53,10 @@ export const addUser = (user) => {
         dispatch(requestStart());
         axios.post('/user/add-update', user)
         .then(res => {
-            console.log(res);
             dispatch(addUserSuccess(res.data.message))
         })
         .catch(err => {
-            console.log(err.response);
+            window.alert(err.response.data.message);
             dispatch(addUserFailed(err.response.data.message))
         })
     }

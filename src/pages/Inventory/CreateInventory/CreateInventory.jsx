@@ -1,21 +1,27 @@
+// React Imports
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useHistory } from 'react-router-dom';
+// Redux Imports
+import { useDispatch, useSelector } from 'react-redux';
 import * as actions from '../../../store/actions/index';
-
+// Components Imports
 import Spinner from '../../../components/global/Spinner/Spinner';
+// Styles
+import classes from './CreateInventory.module.scss';
+// Material UI Imports
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
-import classes from './CreateInventory.module.scss'
 
 const CreateInventory = () => {
+    // React Router consts
     const location = useLocation();
     const history = useHistory();
+    // Redux consts
     const dispatch = useDispatch()
-
+    // State consts
     const [name, setName] = useState(location.state ? location.state.name : '');
     const [number, setNumber] = useState(location.state ? location.state.number : '');
     const [caseQuantity, setCaseQuantity] = useState(location.state ? location.state.case_quantity : '');
@@ -29,7 +35,7 @@ const CreateInventory = () => {
     const [height, setHeight] = useState(location.state ? location.state.height : '');
     const [isReady, setIsReady] = useState(location.state ? location.state.ship_ready : false)
 
-
+    // Function to re-format data and dispatch redux action
     const createInventory = (event) => {
         event.preventDefault();
         let data = {
@@ -53,11 +59,11 @@ const CreateInventory = () => {
             dispatch(actions.createInventory(data))
         }
     }
-
+    // Function to navigate back
     const goBack = () => {
         history.goBack();
     }
-
+    // Redux state consts
     const message = useSelector(state => state.inventory.message)
     const error = useSelector(state => state.inventory.error)
     const loading = useSelector(state => state.inventory.loading)
@@ -90,8 +96,8 @@ const CreateInventory = () => {
                         }
                         label="Ship Ready"
                     />
-                    {message !== '' ? <p style={{color: 'green'}}>{message}</p> : null}
-                    {error !== '' ? <p style={{color: 'red'}}>{error}</p> : null}
+                    {message !== '' && <p style={{color: 'green'}}>{message}</p>}
+                    {error !== '' && <p style={{color: 'red'}}>{error}</p>}
                     {message || error ? <p style={{cursor: 'pointer', color: 'blue'}} onClick={goBack}>Go back</p> : null}
                     <Button variant="contained" color="primary" type="submit">
                         {loading ? <Spinner /> : 'Submit'}

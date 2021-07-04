@@ -1,23 +1,29 @@
+// React Imports
 import React, { useState } from 'react';
-import * as actions from '../../../store/actions';
+// Redux Imports
 import { useSelector, useDispatch } from 'react-redux';
+import * as actions from '../../../store/actions';
+// React-router Imports
 import { useLocation, useHistory } from 'react-router';
-
+// Componets
 import Spinner from '../../../components/global/Spinner/Spinner';
+// Material UI 
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
+// Styles
 import classes from './CreateUser.module.scss'
 
 
 const CreateUser = () => {
+    // Hooks consts
     const location = useLocation();
     const history = useHistory();
     const dispatch = useDispatch()
+    // State consts
     const newDate = new Date()
-
     const [userName, setUserName] = useState(location.state ? location.state.username : '');
     const [firstName, setFirstName] = useState(location.state ? location.state.first_name : '');
     const [lastName, setLastName] = useState(location.state ? location.state.last_name : '');
@@ -30,7 +36,6 @@ const CreateUser = () => {
     const [isEmail, setIsEmail] = useState(location.state ? location.state.send_tracking_emails_by_default : false)
 
     const addUser = () => {
-        //event.preventDefault();
         let userData = {
             username: userName,
             email: email,
@@ -99,7 +104,7 @@ const CreateUser = () => {
                     {error !== '' ? <p style={{ color: 'red', textTransform: 'capitalize' }}>{error}</p> : null}
                     {message || error ? <p style={{ cursor: 'pointer', color: 'blue' }} onClick={goBack}>Go back</p> : null}
                     <Button variant="contained" color="primary" onClick={addUser}>
-                        {loading ? <Spinner /> : 'Submit' }
+                        {loading ? <Spinner /> : 'Submit'}
                     </Button>
                 </form>
 

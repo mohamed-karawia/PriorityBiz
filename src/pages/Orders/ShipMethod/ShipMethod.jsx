@@ -1,7 +1,11 @@
+// React Imports
 import React, { useState } from 'react';
+// React-router imports
+import { Redirect } from 'react-router-dom';
 import { useLocation, useHistory } from 'react-router';
+// Styles
 import classes from './ShipMethod.module.scss';
-
+// Material Ui
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -15,16 +19,16 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
+// Axios
 import axios from 'axios';
-import { Redirect } from 'react-router-dom';
 
 const ShipMethod = () => {
+    // Hooks consts
     const location = useLocation();
     const history = useHistory();
-    console.log(location.state);
+    // State consts
     const lineItems = location.state.lineItem;
     const shipRates = location.state.shipRayes
-    
     const [insuranceValue, setInsuranceValue] = useState('');
     const [signature, setSignature] = useState('NONE');
     const [shippingMethod, setShippingMethod] = useState([location.state.shipRayes[0].carrier, location.state.shipRayes[0].service]);
@@ -49,11 +53,10 @@ const ShipMethod = () => {
         }
         axios.post('/order/add-update/pick-rate', data)
         .then(res => {
-            console.log(res)
             history.push('/order?page=1')
         })
         .catch(err => {
-            console.log(err)
+            window.alert(err.response.data.message)
         })
     }
 
@@ -73,7 +76,7 @@ const ShipMethod = () => {
         <React.Fragment>           
             {location.state ? (<><div className={classes.RecipientDetails}>
                 <h2>Recipient: {location.state.order.recipient.name} {location.state.order.recipient.contact} | {location.state.order.recipient.country}</h2>
-                <p>Total Weight: {location.state.total_weight}</p>
+                <p>Total Weight: {Number(location.state.total_weight).toFixed(2)}</p>
                 <p>Total Packages: {location.state.total_packages}</p>
                 <p>Insurance Cost: {location.state.insurance_cost} (built in to rates below)</p>
             </div>
@@ -133,7 +136,7 @@ const ShipMethod = () => {
 
                                     {listRate.length > 0 ? (
                                         listRate.map(rate => (
-                                            <TableRow>
+                                            <TableRow key={rate._id}>
                                                 <TableCell align="center">
                                                     <input
                                                         type="radio"

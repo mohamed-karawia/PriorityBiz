@@ -1,12 +1,16 @@
+// React Imports
 import React, { useEffect, useState } from 'react';
+// React-router Imports
 import { useLocation, useHistory, Redirect } from 'react-router';
+// Redux Imports
 import * as actions from '../../../store/actions/index';
 import { useDispatch, useSelector } from 'react-redux';
+// Styles
 import classes from './AddOrder.module.scss'
-
+// Components
 import Spinner from '../../../components/global/Spinner/Spinner';
 import LargeSpinner from '../../../components/global/LargeSpinner/LargeSpinner';
-
+// Material UI
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -16,25 +20,32 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import Pagination from '@material-ui/lab/Pagination';
+// Axios
 import axios from 'axios';
 
 
 const AddOrder = () => {
+    // URL Consts
     const location = useLocation();
     const history = useHistory();
     const dispatch = useDispatch();
-    const pages = useSelector(state => Math.ceil(state.inventory.total/10))
+    // State Consts
     const [page, setPage] = useState(1);
     const [nextPageLoading, setNextPageLoading] = useState(false)
-
+    // useEffect Hook
     useEffect(() => {
         if (location.state) {
             dispatch(actions.getOrderAndUpdate(location.state.orderId))
             dispatch(actions.getInventory(page))
         }
     }, [])
-
+    // Redux State getters
+    const lines = useSelector(state => state.orders.ordersLines)
+    const pages = useSelector(state => Math.ceil(state.inventory.total/10))
+    const loading = useSelector(state => state.orders.loading)
     const inventory = useSelector(state => state.inventory.inventory)
+    // Refactoring lines to present
+    let newLines = lines;
     const presentRows = [];
     inventory.forEach(row => {
         presentRows.push({
@@ -66,10 +77,6 @@ const AddOrder = () => {
         dispatch(actions.addInventory(data))
     }
 
-    const lines = useSelector(state => state.orders.ordersLines)
-    const loading = useSelector(state => state.orders.loading)
-
-    let newLines = lines;
     const editQuantityCase = (e, id) => {
         newLines = lines.map(line =>
             line._id === id
@@ -77,6 +84,7 @@ const AddOrder = () => {
                 : line
         );
     }
+
     const editQuantityUnits = (e, id) => {
         newLines = lines.map(line =>
             line._id === id
@@ -103,6 +111,11 @@ const AddOrder = () => {
         dispatch(actions.removeOrder(id, location.state.orderId))
     }
 
+    const changePage = (e, value) => {
+        setPage(value);
+        dispatch(actions.getInventory(page))
+    }
+    // On order complete save state and navigate to next page
     const orderComplete = () => {
         setNextPageLoading(true)
         axios.post('/order/add-update/select-ship-method', {
@@ -110,7 +123,6 @@ const AddOrder = () => {
         })
             .then(res => {
                 setNextPageLoading(false)
-                console.log(res)
                 if(res.data.shipRayes.length < 1){
                     window.alert("Order can't be shipped (Wrong recipient info)")
                     return
@@ -120,16 +132,11 @@ const AddOrder = () => {
             })
             .catch(err => {
                 setNextPageLoading(false)
-                console.log(err.response.data.message)
                 window.alert(err.response.data.message)
             })
 
     }
 
-    const changePage = (e, value) => {
-        setPage(value);
-        dispatch(actions.getInventory(page))
-    }
 
     return (
         <React.Fragment>
@@ -151,7 +158,7 @@ const AddOrder = () => {
                         <TableBody>
                             {lines.length > 0 ? (
                                 lines.map(row => (
-                                    <TableRow>
+                                    <TableRow key={row.id}>
                                         <TableCell align="center">{row.item.number}</TableCell>
                                         <TableCell align="center">{row.item.name}</TableCell>
                                         <TableCell align="center">{row.item.description}</TableCell>
@@ -159,12 +166,10 @@ const AddOrder = () => {
                                             <p>{row.quantity_cases}</p>
                                             <input type="number" style={{ width: '4rem' }} onChange={e => editQuantityCase(e, row._id)} />
                                         </TableCell>
-
                                         <TableCell align="center">
                                             <p>{row.quantity_units}</p>
                                             <input type="number" style={{ width: '4rem' }} onChange={e => editQuantityUnits(e, row._id)} />
                                         </TableCell>
-
                                         <TableCell align="center">
                                             <Button variant="contained" color="primary" style={{ marginRight: '1rem' }} onClick={() => saveOrder(row._id)}>Save</Button>
                                             <Button variant="contained" color="secondary" onClick={() => removeOrder(row._id)}>Remove from Order</Button>
@@ -178,7 +183,9 @@ const AddOrder = () => {
                     </Table>
                 </TableContainer>)}
                 {lines.length > 0 ? <Button variant="contained" color="primary" style={{ margin: '1rem' }} onClick={orderComplete}>{nextPageLoading ? <Spinner /> : 'Order Complete'}</Button> : null}
+
                 {/************************************************************************ */}
+
                 <h1>Add more to the order.</h1>
                 <TableContainer component={Paper}>
                     <Table aria-label="simple table">
@@ -219,17 +226,11 @@ const AddOrder = () => {
                                     <TableCell align="center"><Button variant="contained" color="primary" onClick={(e) => addOrder(e, i._id)}>Add to Orders</Button></TableCell>
                                 </TableRow>
                             ))}
-                            {/*<TableRow>
-                            <TableCell align="center">test</TableCell>
-                        </TableRow>*/}
-
                         </TableBody>
                     </Table>
                 </TableContainer>
             </div>) : <Redirect to="/order?page=1" />}
-            {pages > 1 ? (<div className={classes.pagination}>
-                <Pagination count={pages} page={page} onChange={changePage} color="primary" />
-            </div>) : null}
+            {pages > 1 && <div className={classes.pagination}><Pagination count={pages} page={page} onChange={changePage} color="primary" /></div>}
         </React.Fragment>
     )
 }

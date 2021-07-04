@@ -57,10 +57,9 @@ var getOrders = function getOrders(page, filters) {
     }
 
     _axios.default.get(url).then(function (res) {
-      console.log(res);
       dispatch(getOrdersSuccess(res.data));
     }).catch(function (err) {
-      console.log(err.response);
+      window.alert(err.response.data.message);
     });
   };
 };
@@ -72,10 +71,9 @@ var getOrderAndUpdate = function getOrderAndUpdate(id) {
     dispatch(getOrdersStart());
 
     _axios.default.get("/order/add-update/".concat(id)).then(function (res) {
-      console.log(res);
       dispatch(getOrderAndUpdateSuccess(res.data.items_in_order));
     }).catch(function (err) {
-      console.log(err.response);
+      window.alert(err.response.data.message);
     });
   };
 };
@@ -85,10 +83,8 @@ exports.getOrderAndUpdate = getOrderAndUpdate;
 var addInventory = function addInventory(data) {
   return function (dispatch) {
     _axios.default.post('/order/add-update/add-inventory', data).then(function (res) {
-      console.log(res);
       dispatch(getOrderAndUpdate(data.orderId));
     }).catch(function (err) {
-      console.log(err.response);
       window.alert(err.response.data.message);
     });
   };
@@ -101,10 +97,9 @@ var removeOrder = function removeOrder(id, orderId) {
     _axios.default.post('/order/add-update/remove-inventory', {
       lineItemId: id
     }).then(function (res) {
-      console.log(res);
       dispatch(getOrderAndUpdate(orderId));
     }).catch(function (err) {
-      console.log(err.response);
+      window.alert(err.response.data.message);
     });
   };
 };

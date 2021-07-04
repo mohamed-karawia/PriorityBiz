@@ -59,7 +59,6 @@ export const authUser = (data) => {
         dispatch(authStart())
         axios.post('https://scms-api.herokuapp.com/auth/login', data)
         .then(res => {
-            console.log(res);
             const expirationDate = new Date(new Date().getTime() + res.data.data.token_expiresIn);
             localStorage.setItem('token', res.data.data.token);
             localStorage.setItem('expirationDate', expirationDate);
@@ -69,7 +68,6 @@ export const authUser = (data) => {
             dispatch(checkAuthTimeout(res.data.data.token_expiresIn));
         })
         .catch(err => {
-            console.log(err.response)
             dispatch(authFail(err.response.data.message))
         })
     }
@@ -108,11 +106,10 @@ export const getSudo = () => {
     return dispatch => {
         axios.get('/user/sudo')
         .then(res => {
-            console.log(res)
             dispatch(getSudoSuccess(res.data.descount))
         })
         .catch(err => {
-            console.log(err.response)
+            window.alert(err.response.data.message)
         })
     }
 }
@@ -121,13 +118,12 @@ export const changeSudo = (id) => {
     return dispatch => {
         axios.post('/user/sudo', {id : id})
         .then(res => {
-            console.log(res)
             localStorage.setItem('sudoToken', res.data.data.token);
             localStorage.setItem('sudoUsername', res.data.data.userName);
             dispatch(changeSudoSuccess(res.data.data))
         })
         .catch(err => {
-            console.log(err)
+            window.alert(err.response.data.message)
         })
     }
 }

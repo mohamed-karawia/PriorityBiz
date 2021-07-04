@@ -1,12 +1,19 @@
+// React Imports
 import React, {useState} from 'react';
+// React Router
 import { Link } from 'react-router-dom'
+// Styles
 import classes from './Import.module.scss';
+// Material UI
 import Alert from '@material-ui/lab/Alert';
 import Button from '@material-ui/core/Button';
+// Components
 import Spinner from '../../components/global/Spinner/Spinner'
+// Axios
 import axios from 'axios';
 
 const ImportRecipient = (props) => {
+    //State consts
     const [selectedFile, setSelectedFile] = useState();
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
@@ -14,7 +21,6 @@ const ImportRecipient = (props) => {
 
     const onFileChange = (e) => {
         setSelectedFile(e.target.files[0])
-        console.log(selectedFile)
     }
 
     const uploadFile = () => {
@@ -34,7 +40,7 @@ const ImportRecipient = (props) => {
             setError('')
         })
         .catch(err => {
-            console.log(err.response)
+            window.alert(err.response.data.message);
             setLoading(false)
             setError('An error occured please try again');
             setMessage('')

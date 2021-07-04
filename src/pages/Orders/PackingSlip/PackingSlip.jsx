@@ -1,6 +1,10 @@
-import axios from 'axios';
+// React Imports
 import React, { useEffect, useState } from 'react';
+// Axios 
+import axios from 'axios';
+// React-router
 import { useRouteMatch, } from 'react-router';
+// Styles
 import classes from './PackingSlip.module.scss';
 
 const PackingSlip = () => {
@@ -15,7 +19,7 @@ const PackingSlip = () => {
                 window.print()
             })
             .catch(err => {
-                console.log(err)
+                window.alert(err.response.data.message)
             })
     }, [])
 
@@ -49,7 +53,7 @@ const PackingSlip = () => {
                 <th># Units</th>
                 </tr>
             {data.lineItem.map((line) => (
-            <tr>
+            <tr key={line._id}>
                 <td>{ line.item.name }</td>
                 <td>{ line.item.number }</td>
                 <td>{ line.item.description }</td>

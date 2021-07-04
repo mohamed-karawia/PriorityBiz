@@ -1,13 +1,14 @@
+// React Imports
 import React from 'react';
-
-
+// Components Imports
 import SubNav from '../../components/global/SubNav/SubNav';
+// Pages Imports
 import getInventory from './getInventory/getInventory';
 import CreateInventory from './CreateInventory/CreateInventory';
 import ImportInventory from './ImportInventory/ImportInventory';
 import UploadHistory from './UploadHistory/UploadHistory';
+// React Router Imports
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
-
 
 const Inventory = () => {
     const route = useRouteMatch();
@@ -20,7 +21,7 @@ const Inventory = () => {
 
 
     return (
-        <>
+        <React.Fragment>
             <SubNav subRoutes={subRoutes}></SubNav>
             <Switch>
                 <Route path={`${route.path}/`} component={getInventory} exact></Route>
@@ -28,7 +29,7 @@ const Inventory = () => {
                 <Route path={`${route.path}/import`} component={ImportInventory} exact></Route>
                 <Route path={`${route.path}/history`} component={UploadHistory} exact></Route>
             </Switch>
-        </>
+        </React.Fragment>
     )
 }
 

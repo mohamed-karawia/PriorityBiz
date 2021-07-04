@@ -34,11 +34,10 @@ export const getOrders = (page, filters) => {
         }
         axios.get(url)
         .then(res => {
-            console.log(res)
             dispatch(getOrdersSuccess(res.data))
         })
         .catch(err => {
-            console.log(err.response)
+            window.alert(err.response.data.message);
         })
     }
 }
@@ -48,10 +47,9 @@ export const getOrderAndUpdate = (id) => {
         dispatch(getOrdersStart())
         axios.get(`/order/add-update/${id}`)
         .then(res => {
-            console.log(res)
             dispatch(getOrderAndUpdateSuccess(res.data.items_in_order))
         }).catch(err => {
-            console.log(err.response)
+            window.alert(err.response.data.message);
         })
     }   
 }
@@ -60,11 +58,9 @@ export const addInventory = (data) => {
     return dispatch => {
         axios.post('/order/add-update/add-inventory', data)
         .then(res => {
-            console.log(res)
             dispatch(getOrderAndUpdate(data.orderId))
         })
         .catch(err => {
-            console.log(err.response)
             window.alert(err.response.data.message)
         })
     }
@@ -76,11 +72,10 @@ export const removeOrder = (id, orderId) => {
             lineItemId: id
         })
         .then(res => {
-            console.log(res)
             dispatch(getOrderAndUpdate(orderId))
         })
         .catch(err => {
-            console.log(err.response)
+            window.alert(err.response.data.message);
         })
     }
 }

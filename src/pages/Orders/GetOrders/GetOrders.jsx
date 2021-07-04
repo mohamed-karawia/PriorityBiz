@@ -1,14 +1,20 @@
+// React Imports
 import React, { useState, useEffect } from 'react';
+// Redux Imports
 import { useSelector, useDispatch } from 'react-redux';
+import * as actions from '../../../store/actions/index'
+// React-router imports
 import { useLocation, useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
+// Query string package to get queries from API
 import queryString from 'query-string';
+// Styles
+import classes from './GetOrders.module.scss';
+// Componetes
+import LargeSpinner from '../../../components/global/LargeSpinner/LargeSpinner';
+// Material UI
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import classes from './GetOrders.module.scss';
-import * as actions from '../../../store/actions/index'
-import LargeSpinner from '../../../components/global/LargeSpinner/LargeSpinner';
-
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -17,14 +23,16 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Pagination from '@material-ui/lab/Pagination';
+// Axios
 import axios from 'axios';
 
 const GetOrders = () => {
+    // Hooks consts
     const dispatch = useDispatch();
     const history = useHistory();
     const { search } = useLocation();
     const values = queryString.parse(search);
-    console.log(values)
+    // State consts
     const [page, setPage] = useState(values.page ? parseInt(values.page) : 1);
     const [startDate, setStartDate] = useState(values.startDate ? values.startDate : '');
     const [endDate, setEndDate] = useState(values.endDate ? values.endDate : '');
@@ -43,7 +51,7 @@ const GetOrders = () => {
     useEffect(() => {
         dispatch(actions.getOrders(page, filters))
     }, [page])
-
+    // On Change any filter
     const changeFilters = (e, filterType) => {
         switch (filterType) {
             case 'startDate':
@@ -67,11 +75,8 @@ const GetOrders = () => {
                 filters = { ...filters, tracking: e.target.value };
                 break;
         }
-        console.log(filters)
     }
-
-
-
+    // Checking which filters submitted buy user to change queries
     const submitFilter = () => {
         if (filters.recipient || filters.transaction || filters.tracking) {
             history.replace(`/order?page=${page}&recipient=${filters.recipient}&transaction=${filters.transaction}&tracking=${filters.tracking}`)
@@ -84,10 +89,11 @@ const GetOrders = () => {
             dispatch(actions.getOrders(page))
         }
     }
-
+    // Redux State getters
     const orders = useSelector(state => state.orders.orders);
-    const loading = useSelector(state => state.orders.loading)
-    const total = useSelector(state => state.orders.total)
+    const loading = useSelector(state => state.orders.loading);
+    const total = useSelector(state => state.orders.total);
+    const role = useSelector(state => state.auth.role);
     const pages = Math.ceil(total / 10)
 
     const goEdit = (e, order) => {
@@ -105,7 +111,6 @@ const GetOrders = () => {
             .then(res => {
                 history.push('ship-order', res.data)
             }).catch(err => {
-                console.log(err.response)
                 window.alert(err.response.data.message)
             })
     }
@@ -125,11 +130,10 @@ const GetOrders = () => {
             action: action
         })
         .then(res => {
-            console.log(res)
             dispatch(actions.getOrders(page, filters))
         })
         .catch(err => {
-            console.log(err)
+            window.alert(err.response.data.message)
         })
     }
 
@@ -211,8 +215,8 @@ const GetOrders = () => {
                             <TableCell align="center">Shipped</TableCell>
                             <TableCell align="center">Status</TableCell>
                             <TableCell align="center">Packing Slip</TableCell>
-                            <TableCell align="center">Pick Ticket</TableCell>
-                            <TableCell align="center">Ship</TableCell>
+                            {role === 'superadmin' || role === 'warehouse' ? <TableCell align="center">Pick Ticket</TableCell> : null}
+                            {role === 'superadmin' || role === 'warehouse' ? <TableCell align="center">Ship</TableCell> : null}
                             <TableCell align="center">Tracking</TableCell>
                             <TableCell align="center">Customer Reference</TableCell>
                             <TableCell align="center">Cancel / Restore</TableCell>
@@ -231,7 +235,7 @@ const GetOrders = () => {
                                     </TableCell>
                                     <TableCell align="center">{o.createdAt.slice(0, 10)}</TableCell>
                                     <TableCell align="center">{o.createdAt === o.updatedAt ? null : o.updatedAt.slice(0, 10)}</TableCell>
-                                    <TableCell align="center">{o.shipped}</TableCell>
+                                    <TableCell align="center">{o.shipped ? o.shipped.slice(0, 10) : null}</TableCell>
                                     <TableCell align="center">{
                                         (() => {
                                             if (o.status === 1)
@@ -243,9 +247,9 @@ const GetOrders = () => {
                                         })()
                                     }</TableCell>
                                     <TableCell align="center"><Link style={{ textDecoration: 'none', color: 'blue' }}  target="_blank" to={`/picking-slip/${o._id}`} >Packing Slip</Link></TableCell>
-                                    <TableCell align="center"><Link style={{ textDecoration: 'none', color: 'blue' }} target="_blank" to={`/picking-ticket/${o._id}`}>Packing Ticket</Link></TableCell>
-                                    <TableCell align="center"><Button variant="contained" color="primary" onClick={e => postShip(e, o._id)}>Ship</Button></TableCell>
-                                    <TableCell align="center">{
+                                    {role === 'superadmin' || role === 'warehouse' ? <TableCell align="center"><Link style={{ textDecoration: 'none', color: 'blue' }} target="_blank" to={`/picking-ticket/${o._id}`}>Packing Ticket</Link></TableCell> : null}
+                                    {role === 'superadmin' || role === 'warehouse' ? <TableCell align="center"><Button variant="contained" color="primary" onClick={e => postShip(e, o._id)}>Ship</Button></TableCell> : null}
+                                    <TableCell align="center" style={{ maxWidth: '8rem' }}>{
                                         (() => {
                                                 if(o.tracking && o.actual_carrier === 'FedEx')
                                                     return  <a href={`https://www.fedex.com/apps/fedextrack/?tracknumbers=${o.tracking}`} target="_blank" rel="noopener noreferrer">{o.tracking}</a>
@@ -265,9 +269,7 @@ const GetOrders = () => {
                     </TableBody>
                 </Table>
             </TableContainer>)}
-            <div className={classes.pagination}>
-                <Pagination count={pages} page={page} onChange={changePage} color="primary" />
-            </div>
+            {pages > 1 && <div className={classes.pagination}><Pagination count={pages} page={page} onChange={changePage} color="primary" /></div>}
         </React.Fragment>
     )
 }

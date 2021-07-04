@@ -1,7 +1,10 @@
+// React Imports
 import React, { useState, useEffect } from 'react';
+// React-Router Imports
 import { useLocation, useHistory } from 'react-router';
+// Styles
 import classes from './ShipOrder.module.scss';
-
+// Material UI
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -10,19 +13,17 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
+// Axios
 import axios from 'axios';
 
 const ShipOrder = () => {
+    // Hooks consts
     const location = useLocation();
-    console.log(location.state);
-
-
+    // State Consts
     let boxes = [];
     location.state.box.forEach((box => {
         boxes.push({ wight: box[1] })
     }))
-
-
     const [showBoxes, setShowBoxes] = useState(boxes);
     const [newData, setNewData] = useState(boxes);
     const [carrier, setCarrier] = useState('');
@@ -61,8 +62,6 @@ const ShipOrder = () => {
         ))
     }
 
-    useEffect(() => console.log(newData), [newData]);
-
     const pickRate = (e, rate) => {
         const data = {
             orderId: location.state.order._id,
@@ -74,11 +73,10 @@ const ShipOrder = () => {
         }
         axios.post('https://scms-api.herokuapp.com/order/add-update/do-ship', data)
             .then(res => {
-                console.log(res)
                 history.push('/')
             })
             .catch(err => {
-                console.log(err.response)
+                window.alert(err.response.data.message)
             })
 
     }
@@ -93,10 +91,10 @@ const ShipOrder = () => {
         }
         axios.post('https://scms-api.herokuapp.com/order/add-update/do-ship', data)
             .then(res => {
-                console.log(res)
+                history.push('/order?page=1')
             })
             .catch(err => {
-                console.log(err.response)
+                window.alert(err.response.data.message)
             })
     }
 
@@ -119,7 +117,7 @@ const ShipOrder = () => {
                             <TableRow key={index}>
                                 <TableCell align="center">{index + 1}</TableCell>
                                 <TableCell align="center" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                    {b.wight}
+                                    {Number(b.wight).toFixed(2)}
                                     <input type="text" placeholder="new weight" style={{ padding: '.2rem .6rem' }} onChange={e => changeWeight(e, index)} />
                                 </TableCell>
                                 <TableCell align="center"><input type="text" onChange={e => changeDesc(e, index)} /></TableCell>
@@ -134,6 +132,7 @@ const ShipOrder = () => {
                 <Button variant="contained" color="primary" onClick={() => addRows()}>Add box</Button>
                 <Button variant="contained" color="secondary" onClick={() => removeRows()}>Remove Box</Button>
             </div>
+            {/**************************************************************************************************** */}
             <TableContainer component={Paper}>
                 <Table aria-label="simple table">
                     <TableHead>

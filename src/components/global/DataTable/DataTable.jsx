@@ -20,6 +20,10 @@ const DataTable = (props) => {
     props.editClicked(id);
   }
 
+  const split = (id) => {
+    props.split(id);
+  }
+
   const handleAdjustClick = (id) => {
     props.adjustClicked(id);
   }
@@ -67,6 +71,8 @@ const DataTable = (props) => {
                         <Button variant="contained" color="primary" onClick={() => adjustDiscount(row)}>Adjust</Button>
                         </form>
                       </TableCell>)
+                      case 'splitCase':
+                        return <TableCell align="center" key={row['id']}><Button variant="contained" color="primary"  onClick={(key) => split(row['id'])}>split</Button></TableCell>
                     default:
                       return <TableCell align="center">{row[key]}</TableCell>
                   }

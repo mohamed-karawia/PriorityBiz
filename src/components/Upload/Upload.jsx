@@ -1,10 +1,12 @@
+// React Imports
 import React, { useEffect, useState } from 'react';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
+// Styles
 import classes from './Upload.module.scss';
+// React-router Imports
 import { useLocation, useHistory } from 'react-router';
+// query-string to get queries from URL
 import queryString from 'query-string';
-
+// Material UI imports
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -13,17 +15,26 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Pagination from '@material-ui/lab/Pagination';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+// Axios
 import axios from 'axios';
 
 const Upload = (props) => {
+    // Hooks consts
     const history = useHistory();
     const { search } = useLocation();
+    // State variables
     const values = queryString.parse(search);
-    const [page, setPage] = useState(values.page ? values.page : 1);
+    const [page, setPage] = useState(values.page ? Number(values.page) : 1);
     const [startDate, setStartDate] = useState(values.startDate ? values.startDate : '');
     const [endDate, setEndDate] = useState(values.endDate ? values.endDate : '');
     const [data, setData] = useState([]);
     const [pages, setPages] = useState(0);
+
+    useEffect(() => {
+        fetchHistory();
+    }, [page])
 
     const changeStartDate = (e) => {
         if (e.target.value) {
@@ -49,20 +60,13 @@ const Upload = (props) => {
     const fetchHistory = () => {
         axios.get(`${props.path}?page=${page}&dataRangeStart=${startDate}&dataRangeEnd=${endDate}`)
             .then(res => {
-                console.log(res)
                 setData(res.data.data)
                 setPages(Math.ceil(res.data.total / 10))
-                console.log(pages)
             })
             .catch(err => {
-                console.log(err.response)
+                window.alert(err.response.data.message);
             })
     }
-
-
-    useEffect(() => {
-            fetchHistory();
-    }, [page])
 
     const getuploads = () => {
         history.replace(`${props.path}?page=${page}&startDate=${startDate}&endDate=${endDate}`)
@@ -70,13 +74,13 @@ const Upload = (props) => {
     }
 
     const downloadFile = (e, row) => {
-        axios.get(`http://192.168.1.7:3000/uploads/test.csv`)
-        .then(res => {
-            console.log(res)
-        })
-        .catch(err => {
-            console.log(err.response)
-        })
+        axios.get(`https://scms-api.herokuapp.com/uploads/test.csv`)
+            .then(res => {
+
+            })
+            .catch(err => {
+                window.alert(err.response.data.message);
+            })
     }
 
     return (
@@ -115,7 +119,7 @@ const Upload = (props) => {
                     </TableHead>
                     <TableBody>
                         {data.length > 0 ? data.map((row) => (
-                            <TableRow>
+                            <TableRow key={row._id}>
                                 <TableCell align="center">{row.createdAt}</TableCell>
                                 <TableCell align="center">{row.user.username}</TableCell>
                                 <TableCell align="center" onClick={e => downloadFile(e, row)}><a target="_blank" href={`https://scms-api.herokuapp.com/${row.filename}`} rel="noreferrer">{row.filename}</a></TableCell>
@@ -124,9 +128,7 @@ const Upload = (props) => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            {pages > 1 ? <div className={classes.pagination}>
-                <Pagination count={pages} page={page} onChange={changePage} color="primary" />
-            </div> : null}
+            {pages > 1 && <div className={classes.pagination}><Pagination count={pages} page={page} onChange={changePage} color="primary" /></div>}
         </React.Fragment>
     )
 }

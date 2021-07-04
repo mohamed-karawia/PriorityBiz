@@ -19,7 +19,9 @@ import ShipOrder from './pages/Orders/ShipOrder/ShipOrder';
 import PackingSlip from './pages/Orders/PackingSlip/PackingSlip';
 import PickingTicket from './pages/Orders/PickingTicket/PickingTicket'
 import Sudo from './components/global/Sudo/Sudo';
-import SudoPage from './pages/Sudo/Sudo'
+import SudoPage from './pages/Sudo/Sudo';
+import TestLabel from './pages/TestLabel/TestLabel';
+import Members from './pages/Members/Members';
 
 import * as actions from './store/actions/index'
 
@@ -69,6 +71,8 @@ function App() {
           <Route path="/picking-slip/:id" component={PackingSlip}></Route>
           <Route path="/picking-ticket/:id" component={PickingTicket}></Route>
           <Route path="/sudo/" component={SudoPage}></Route>
+          <Route path="/test-label/" component={TestLabel}></Route>
+          <Route path="/members/" component={Members}></Route>
           <Route path="/" component={Home} exact></Route>
           <Redirect to="/" />
         </Switch>

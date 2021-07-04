@@ -1,19 +1,24 @@
+// React Imports
 import React, { useState, useEffect } from 'react';
+// Redux Imports
 import { useSelector, useDispatch } from 'react-redux';
+import { getUsers } from '../../../store/actions';
+// React-router
 import { useLocation, useHistory, useRouteMatch } from 'react-router';
+// query-string package to get queries from URL
 import queryString from 'query-string'
+// Styles
 import classes from './GetUsers.module.scss';
-
+// Components
 import LargeSpinner from '../../../components/global/LargeSpinner/LargeSpinner'
 import DataTable from '../../../components/global/DataTable/DataTable';
-
+// Material Ui
 import { makeStyles } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Pagination from '@material-ui/lab/Pagination';
-import { getUsers } from '../../../store/actions';
-
+// Material UI styles
 const useStyles = makeStyles((theme) => ({
     formControl: {
         margin: theme.spacing(1),
@@ -25,17 +30,21 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const GetUsers = () => {
-
+    // Hooks consts
     const matClasses = useStyles();
     const dispatch = useDispatch();
     const { search } = useLocation()
     const history = useHistory();
     const route = useRouteMatch()
-
-    /*console.log(search)*/
+    // State consts
     const values = queryString.parse(search)
     const [page, setPage] = useState(parseInt(values.page))
     const [active, setActive] = useState(values.active);
+
+    useEffect(() => {
+        dispatch(getUsers(active, page));
+    }, [active, page, history])
+
 
     const handleChangeFilter = (e) => {
         history.replace(`/users?page=${page}&active=${e.target.value}`)
@@ -46,12 +55,7 @@ const GetUsers = () => {
         history.replace(`/users?page=${value}&active=${active}`)
         setPage(value)
     }
-
-
-    useEffect(() => {
-        dispatch(getUsers(active, page));
-    }, [active, page, history])
-
+    // Refactoring rows for presentation
     const headers = ['Edit', 'Adjust Discounts', 'ID', 'Company', 'First Name', 'Last Name', 'Status', 'Roles'];
     const rows = useSelector(state => state.users.users);
     const loading = useSelector(state => state.users.loading);
@@ -74,9 +78,7 @@ const GetUsers = () => {
     }
 
     const editUser = (id) => {
-        console.log(id);
         const filterdUser = rows.filter(row => row._id === id)
-        console.log(filterdUser[0])
         history.push(`${route.path}add-update/${id}`, filterdUser[0])
     }
 
@@ -124,4 +126,4 @@ const GetUsers = () => {
     )
 }
 
-export default GetUsers
+export default GetUsers;

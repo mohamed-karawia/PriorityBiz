@@ -44,11 +44,10 @@ export const getRecipients = (page) => {
         dispatch(fetchRecipientsStart())
         axios.get(`/recipient/add-update?page=${page}`)
         .then(res => {
-            console.log(res)
             dispatch(fetchRecipientsSuccess(res.data.data, res.data.total))
         })
         .catch(err => {
-            console.log(err.response)
+            window.alert(err.response.data.message);
             dispatch(fetchRecipientsFailed(err.response.data))
         })
     }
@@ -59,11 +58,10 @@ export const createRecipient = (data) => {
         dispatch(createRecipientStart())
         axios.post('/recipient/add-update', data)
         .then(res => {
-            console.log(res);
             dispatch(createRecipientSuccess(res.data))
         })
         .catch(err => {
-            console.log(err.response);
+            window.alert(err.response.data.message);
             dispatch(createRecipientFailed(err.response))
         })
     }

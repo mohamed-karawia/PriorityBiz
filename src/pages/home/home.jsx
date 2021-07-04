@@ -1,12 +1,19 @@
+// React Imports
 import React, { useEffect, useState } from 'react';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
+// Redux Imports
+import { useSelector, useDispatch } from 'react-redux';
+import * as actions from '../../store/actions'
+// Styles
 import classes from './home.module.scss';
+// React-router 
 import { useLocation, useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import queryString from 'query-string';
+// Components Imports
 import LargeSpinner from '../../components/global/LargeSpinner/LargeSpinner';
-
+// Material UI Imports
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -15,18 +22,23 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Pagination from '@material-ui/lab/Pagination';
+// Axios
 import axios from 'axios';
 
 const Home = (props) => {
     const history = useHistory();
     const { search } = useLocation();
+    const dispatch = useDispatch();
+
     const values = queryString.parse(search);
     const [page, setPage] = useState(values.page ? values.page : 1);
     const [startDate, setStartDate] = useState(values.startDate ? values.startDate : '');
     const [endDate, setEndDate] = useState(values.endDate ? values.endDate : '');
     const [data, setData] = useState([]);
+    const [lowStock, setLowStock] = useState([])
     const [pages, setPages] = useState(0);
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
+    const role = useSelector(state => state.auth.role)
 
     const changeStartDate = (e) => {
         if (e.target.value) {
@@ -53,13 +65,15 @@ const Home = (props) => {
         setLoading(true)
         axios.get(`/?page=${page}&dataRangeStart=${startDate}&dataRangeEnd=${endDate}`)
             .then(res => {
-                console.log(res)
                 setData(res.data.orders)
                 setPages(Math.ceil(res.data.totalOrders / 10))
                 setLoading(false)
+                if(res.data.low_stock){
+                    setLowStock(res.data.low_stock)
+                }
             })
             .catch(err => {
-                console.log(err.response)
+                window.alert(err.response.data.message)
                 setLoading(false)
             })
     }
@@ -86,20 +100,20 @@ const Home = (props) => {
 
     const cancelOrder = (e, status, id) => {
         let action = 'cancel';
-        if(status === 3){
+        if (status === 3) {
             action = 'restore'
         }
         axios.post('/order/add-update/cancel-restore', {
             orderId: id,
             action: action
         })
-        .then(res => {
-            console.log(res)
-            getHome();
-        })
-        .catch(err => {
-            console.log(err)
-        })
+            .then(res => {
+                console.log(res)
+                getHome();
+            })
+            .catch(err => {
+                console.log(err)
+            })
     }
 
     const postShip = (e, id) => {
@@ -112,10 +126,21 @@ const Home = (props) => {
             })
     }
 
+    const split = (id) =>{
+        axios.post('/inventory/split', {id})
+        .then(res => {
+            dispatch(actions.getInventory(page))
+        })
+        .catch(err => {
+            window.alert(err.response.data.message)
+        })
+    }
+
+
     return (
         <React.Fragment>
-            <h1>Pending Orders</h1>
-            <h2>From All Users, grouped by client</h2>
+            <h2>Pending Orders</h2>
+            <h3>From All Users, grouped by client</h3>
             <form className={classes.filters__container} onSubmit={e => e.preventDefault()}>
                 <TextField
                     id="startDate"
@@ -139,7 +164,7 @@ const Home = (props) => {
                 />
                 <Button variant="contained" color="primary" onClick={getuploads}>Filter</Button>
             </form>
-            {loading ? <LargeSpinner /> : (<TableContainer component={Paper}>
+            {loading ? <LargeSpinner /> : (<><TableContainer component={Paper}>
                 <Table aria-label="simple table">
                     <TableHead>
                         <TableRow>
@@ -152,7 +177,7 @@ const Home = (props) => {
                             <TableCell align="center">Status</TableCell>
                             <TableCell align="center">Packing Slip</TableCell>
                             <TableCell align="center">Pick Ticket</TableCell>
-                            <TableCell align="center">Ship</TableCell>
+                            {role === 'superadmin' || role === 'warehouse' ? <TableCell align="center">Ship</TableCell> : null}
                             <TableCell align="center">Tracking</TableCell>
                             <TableCell align="center">Customer Reference</TableCell>
                             <TableCell align="center">Cancel / Restore</TableCell>
@@ -184,7 +209,7 @@ const Home = (props) => {
                                     }</TableCell>
                                     <TableCell align="center"><Link style={{ textDecoration: 'none', color: 'blue' }} target="_blank" to={`/picking-slip/${o._id}`}>Packing Slip</Link></TableCell>
                                     <TableCell align="center"><Link style={{ textDecoration: 'none', color: 'blue' }} target="_blank" to={`/picking-ticket/${o._id}`}>Packing Ticket</Link></TableCell>
-                                    <TableCell align="center"><Button variant="contained" color="primary" onClick={e => postShip(e, o._id)}>Ship</Button></TableCell>
+                                    {role === 'superadmin' || role === 'warehouse' ? <TableCell align="center"><Button variant="contained" color="primary" onClick={e => postShip(e, o._id)}>Ship</Button></TableCell> : null}
                                     <TableCell align="center">{
                                         (() => {
                                             if (o.tracking && o.actual_carrier === 'FedEx')
@@ -204,10 +229,48 @@ const Home = (props) => {
 
                     </TableBody>
                 </Table>
-            </TableContainer>)}
-            <div className={classes.pagination}>
-                <Pagination count={pages} page={page} onChange={changePage} color="primary" />
-            </div>
+            </TableContainer>
+            {pages > 1 && <div className={classes.pagination}><Pagination count={pages} page={page} onChange={changePage} color="primary" /></div>}
+            {/*********************************************************************************************** */}
+           {role !== 'superadmin' && role !== 'warehouse' ? <h2 style={{marginTop: '2rem'}}>Low Stock Inventory</h2> : null}
+            {role !== 'superadmin' && role !== 'warehouse' ? (
+                <TableContainer component={Paper}>
+                <Table aria-label="simple table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell align="center">Name</TableCell>
+                            <TableCell align="center">Item #</TableCell>
+                            <TableCell align="center">Case Quantity</TableCell>
+                            <TableCell align="center">Description</TableCell>
+                            <TableCell align="center">Stock (Case)</TableCell>
+                            <TableCell align="center">Stock (Units)</TableCell>
+                            <TableCell align="center">Split Case</TableCell>
+                            <TableCell align="center">Re-order Quantity</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {lowStock.length > 0 ? (
+                            lowStock.map(i => (
+                                <TableRow key={i._id}>
+                                    <TableCell align="center">{i.name}</TableCell>
+                                    <TableCell align="center">{i.number}</TableCell>
+                                    <TableCell align="center">{i.case_quantity}</TableCell>
+                                    <TableCell align="center">{i.description}</TableCell>
+                                    <TableCell align="center">{i.qoh_case}</TableCell>
+                                    <TableCell align="center" style={{backgroundColor: (i.qoh_case*i.case_quantity)+i.qoh_units < i.reorder_quantity ? 'red' : 'white'}}>
+                                        {i.qoh_units}
+                                    </TableCell>
+                                    <TableCell align="center"><Button variant="contained" onClick={e => split(e, i._id)}>Split</Button></TableCell>
+                                    <TableCell align="center">{i.reorder_quantity}</TableCell>                                    
+                                </TableRow>
+                            ))
+                        ) : <p>lines are empty</p>}
+
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            ) : null}
+            </>)}
         </React.Fragment>
     )
 }

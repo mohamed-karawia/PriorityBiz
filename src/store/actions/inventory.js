@@ -41,11 +41,10 @@ export const getInventory = (page) => {
         dispatch(fetchInventoryStart())
         axios.get(`/inventory/add-update?page=${page}`)
         .then(res => {
-            console.log(res);
             dispatch(fetchInventorySuccess(res.data))
         })
         .catch(err => {
-            console.log(err.response)
+            window.alert(err.response.data.message);
         })
     }
 
@@ -56,11 +55,10 @@ export const createInventory = (data) => {
         dispatch(createInventoryStart())
         axios.post('/inventory/add-update', data)
         .then(res => {
-            console.log(res);
             dispatch(createInventorySuccess(res.data.data))
         })
         .catch(err => {
-            console.log(err.response);
+            window.alert(err.response.data.message);
             dispatch(createInventoryFailed(err.response))
         })
     }
@@ -71,7 +69,6 @@ export const editEnventory = (data) => {
         dispatch(createInventoryStart())
         axios.post('/inventory/add-update/edit', data)
         .then(res => {
-            console.log(res);
             dispatch(createInventorySuccess(res.data.data))
         })
         .catch(err => {

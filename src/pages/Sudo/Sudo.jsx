@@ -1,15 +1,18 @@
+// React Imports
 import React, { useState, useEffect } from 'react';
+// Redux Imports
 import { useDispatch, useSelector } from 'react-redux';
-import classes from './Sudo.module.scss';
 import * as actions from '../../store/actions'
-
+// Styles
+import classes from './Sudo.module.scss';
+// Material UI
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-
+// Material UI Styles
 const useStyles = makeStyles((theme) => ({
     formControl: {
         margin: theme.spacing(1),
@@ -24,12 +27,12 @@ const Sudo = () => {
     const matClasses = useStyles();
     const dispatch = useDispatch();
     const [user, setUser] = useState('');
+    const users = useSelector(state => state.auth.users);
 
     useEffect(() => {
         dispatch(actions.getSudo())
     }, [])
 
-    const users = useSelector(state => state.auth.users);
 
     const handleChangeUser = (e) => {
         setUser(e.target.value)

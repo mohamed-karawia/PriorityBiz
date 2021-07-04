@@ -15,7 +15,7 @@ const PickingTicket = () => {
                 window.print()
             })
             .catch(err => {
-                console.log(err)
+                window.alert(err.response.data.message)
             })
     }, [])
 
@@ -31,7 +31,7 @@ const PickingTicket = () => {
 
         Ship To:
 
-        {data ? <pre>
+        {data && <pre>
             { data.order.recipient.name }<br />
             { data.order.recipient.contact }<br />
             { data.order.recipient.street1 }<br />
@@ -39,9 +39,9 @@ const PickingTicket = () => {
             { data.order.recipient.city }, { data.order.recipient.state } { data.order.recipient.postal }<br />
             { data.order.recipient.country }<br />
             { data.order.recipient.phone }<br />
-        </pre> : null}
+        </pre>}
 
-        {data ? <table>
+        {data && <table>
             <tr>
                 <th>Item Name</th>
                 <th>Item #</th>
@@ -50,7 +50,7 @@ const PickingTicket = () => {
                 <th># Units</th>
                 </tr>
             {data.lineItem.map((line) => (
-            <tr>
+            <tr key={line._id}>
                 <td>{ line.item.name }</td>
                 <td>{ line.item.number }</td>
                 <td>{ line.item.description }</td>
@@ -58,7 +58,7 @@ const PickingTicket = () => {
                 <td>{ line.quantity_units }</td>
             </tr>
             ))}
-        </table> : null}
+        </table>}
 
         <p>Thank you for your order.</p>
         <p>{date.toString()}</p>
