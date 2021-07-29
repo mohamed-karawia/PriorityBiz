@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { NavLink, useLocation, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import * as actions from '../../../store/actions/index';
@@ -11,6 +11,8 @@ const Navbar = () => {
     const history = useHistory();
     const pick = route.pathname.search('picking-');
 
+    const [isNavOpen, setIsNavOpen] = useState(false)
+
     const role = useSelector(state => state.auth.role);
     const username = useSelector(state => state.auth.username)
 
@@ -21,15 +23,27 @@ const Navbar = () => {
 
     let lowerNav = (
         <div className={classes.Nav__lower}>
-            <ul className={classes.Nav__lower__list}>
-                <li className={classes.Nav__lower__list__item}><NavLink to='/' activeClassName={classes.activeRoute} exact>Home</NavLink></li>
-                <li className={classes.Nav__lower__list__item}><NavLink to='/order?page=1' activeClassName={classes.activeRoute}>Orders</NavLink></li>
-                <li className={classes.Nav__lower__list__item}><NavLink to='/inventory?page=1' activeClassName={classes.activeRoute}>Inventory</NavLink></li>
-                <li className={classes.Nav__lower__list__item}><NavLink to='/recipient?page=1' activeClassName={classes.activeRoute}>Recipents</NavLink></li>
+            <ul className={isNavOpen ? `${classes.Nav__lower__list} ${classes.open}` : classes.Nav__lower__list}>
+                <li className={classes.Nav__lower__list__item}  onClick={e => setIsNavOpen(false)}><NavLink to='/' activeClassName={classes.activeRoute} exact>Home</NavLink></li>
+                <li className={classes.Nav__lower__list__item}  onClick={e => setIsNavOpen(false)}><NavLink to='/order?page=1' activeClassName={classes.activeRoute}>Orders</NavLink></li>
+                <li className={classes.Nav__lower__list__item}  onClick={e => setIsNavOpen(false)}><NavLink to='/inventory?page=1' activeClassName={classes.activeRoute}>Inventory</NavLink></li>
+                <li className={classes.Nav__lower__list__item}  onClick={e => setIsNavOpen(false)}><NavLink to='/recipient?page=1' activeClassName={classes.activeRoute}>Recipents</NavLink></li>
                 {role === 'superadmin' ? <li className={classes.Nav__lower__list__item}><NavLink to='/members' activeClassName={classes.activeRoute}>Members</NavLink></li> : null}
                 {role === 'superadmin' ? <li className={classes.Nav__lower__list__item}><NavLink to='/users?page=1&active=all' activeClassName={classes.activeRoute}>Users</NavLink></li> : null}
                 {role === 'superadmin' ? <li className={classes.Nav__lower__list__item}><NavLink to='/test-label' activeClassName={classes.activeRoute}>Test Label</NavLink></li> : null}
             </ul>
+            <svg 
+            className={classes.Nav__lower__icon} 
+            width="27" 
+            height="17" 
+            viewBox="0 0 27 17" 
+            fill="none" 
+            xmlns="http://www.w3.org/2000/svg"
+            onClick={e => setIsNavOpen(!isNavOpen)}>
+                <path d="M26 8.33337H1" stroke="black" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M26 1H1" stroke="black" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M26 15.6667H1" stroke="black" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
             <button onClick={logoutUser}>Logout ({username})</button>
         </div>
     )

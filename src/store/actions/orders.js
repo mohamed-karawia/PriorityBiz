@@ -48,6 +48,7 @@ export const getOrderAndUpdate = (id) => {
         axios.get(`/order/add-update/${id}`)
         .then(res => {
             dispatch(getOrderAndUpdateSuccess(res.data.items_in_order))
+            console.log(res)
         }).catch(err => {
             window.alert(err.response.data.message);
         })

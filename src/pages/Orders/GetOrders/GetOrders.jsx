@@ -229,7 +229,7 @@ const GetOrders = () => {
                                     <TableCell align="center"><Button variant="contained" color="primary" onClick={(e) => goEdit(e, o)}>Edit</Button></TableCell>
                                     <TableCell align="center" style={{ maxWidth: '8rem' }}><p style={{ overflow: 'scroll', overflowY: 'hidden' }}>{o._id}</p></TableCell>
                                     {o.recipient ? (<TableCell align="center">
-                                        {o.recipient.name} {o.recipient.contact}
+                                        {o.recipient.name} <p style={{fontWeight: 'bold'}}> Contact: </p>{o.recipient.contact}
                                         {o.recipient.countary !== 'US' || o.recipient.country !== 'United States' ? <><br /><strong>International? {o.recipient.country}</strong></> : null}
                                         {!o.recipient.phone || o.recipient.phone.length < 8 ? <><br /><span style={{ color: 'red' }}>No recipient phone number (or phone # too short)</span></> : null}
                                     </TableCell>) : <TableCell align="center">Not Found</TableCell>}
@@ -252,9 +252,9 @@ const GetOrders = () => {
                                     <TableCell align="center" style={{ maxWidth: '8rem' }}>{
                                         (() => {
                                                 if(o.tracking && o.actual_carrier === 'FedEx')
-                                                    return  <a href={`https://www.fedex.com/apps/fedextrack/?tracknumbers=${o.tracking}`} target="_blank" rel="noopener noreferrer">Track</a>
+                                                    return  <a href={`https://www.fedex.com/apps/fedextrack/?tracknumbers=${o.tracking}`} target="_blank" rel="noopener noreferrer">{o.tracking}</a>
                                                 else if(o.tracking && o.actual_carrier === 'USPS')
-                                                    return  <a href={`https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${o.tracking}`} target="_blank" rel="noopener noreferrer">Track</a>
+                                                    return  <a href={`https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${o.tracking}`} target="_blank" rel="noopener noreferrer">{o.tracking}</a>
                                                 else
                                                     return <p>Can't be tracked</p>
                                                 }       

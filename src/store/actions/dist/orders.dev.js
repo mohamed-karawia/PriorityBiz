@@ -72,6 +72,7 @@ var getOrderAndUpdate = function getOrderAndUpdate(id) {
 
     _axios["default"].get("/order/add-update/".concat(id)).then(function (res) {
       dispatch(getOrderAndUpdateSuccess(res.data.items_in_order));
+      console.log(res);
     })["catch"](function (err) {
       window.alert(err.response.data.message);
     });

@@ -31,7 +31,8 @@ const AddOrder = () => {
     const dispatch = useDispatch();
     // State Consts
     const [page, setPage] = useState(1);
-    const [nextPageLoading, setNextPageLoading] = useState(false)
+    const [nextPageLoading, setNextPageLoading] = useState(false);
+
     // useEffect Hook
     useEffect(() => {
         if (location.state) {
@@ -41,11 +42,11 @@ const AddOrder = () => {
     }, [])
     // Redux State getters
     const lines = useSelector(state => state.orders.ordersLines)
-    const pages = useSelector(state => Math.ceil(state.inventory.total/10))
+    const [newLines, setNewLines] = useState([])
+    const pages = useSelector(state => Math.ceil(state.inventory.total / 10))
     const loading = useSelector(state => state.orders.loading)
     const inventory = useSelector(state => state.inventory.inventory)
     // Refactoring lines to present
-    let newLines = lines;
     const presentRows = [];
     inventory.forEach(row => {
         presentRows.push({
@@ -77,20 +78,39 @@ const AddOrder = () => {
         dispatch(actions.addInventory(data))
     }
 
-    const editQuantityCase = (e, id) => {
-        newLines = lines.map(line =>
-            line._id === id
-                ? { ...line, quantity_cases: Number(e.target.value) }
-                : line
-        );
-    }
+    /* const editQuantityCase = (e, id) => {
+         setNewLines(lines.map(line =>
+             line._id === id
+                 ? { ...line, quantity_cases: Number(e.target.value) }
+                 : line
+         ))
+         console.log(newLines)
+     }
+ 
+     const editQuantityUnits = (e, id) => {
+         setNewLines(lines.map(line =>
+             line._id === id
+                 ? { ...line, quantity_units: Number(e.target.value) }
+                 : line
+         ))
+         console.log(newLines);
+     }*/
 
-    const editQuantityUnits = (e, id) => {
-        newLines = lines.map(line =>
-            line._id === id
-                ? { ...line, quantity_units: Number(e.target.value) }
-                : line
-        );
+    const editCases = (e, id, type) => {
+        if (type === 'quantity_cases') {
+            setNewLines(lines.map(line =>
+                line._id === id
+                    ? { ...line, quantity_cases: e.target.value }
+                    : line
+            ))
+        }else{
+            setNewLines(lines.map(line =>
+                line._id === id
+                    ? { ...line, quantity_units: e.target.value }
+                    : line
+            ))
+        }
+        console.log(newLines)
     }
 
     const saveOrder = (id) => {
@@ -123,10 +143,10 @@ const AddOrder = () => {
         })
             .then(res => {
                 setNextPageLoading(false)
-                if(res.data.shipRayes.length < 1){
+                if (res.data.shipRayes.length < 1) {
                     window.alert("Order can't be shipped (Wrong recipient info)")
                     return
-                }else{
+                } else {
                     history.push('/ship-method', res.data)
                 }
             })
@@ -164,11 +184,11 @@ const AddOrder = () => {
                                         <TableCell align="center">{row.item.description}</TableCell>
                                         <TableCell align="center">
                                             <p>{row.quantity_cases}</p>
-                                            <input type="number" style={{ width: '4rem' }} onChange={e => editQuantityCase(e, row._id)} />
+                                            <input type="number" style={{ width: '4rem' }} onChange={e => editCases(e, row._id, 'quantity_cases')} />
                                         </TableCell>
                                         <TableCell align="center">
                                             <p>{row.quantity_units}</p>
-                                            <input type="number" style={{ width: '4rem' }} onChange={e => editQuantityUnits(e, row._id)} />
+                                            <input type="number" style={{ width: '4rem' }} onChange={e => editCases(e, row._id, 'quantity_units')} />
                                         </TableCell>
                                         <TableCell align="center">
                                             <Button variant="contained" color="primary" style={{ marginRight: '1rem' }} onClick={() => saveOrder(row._id)}>Save</Button>

@@ -63,8 +63,9 @@ const Home = (props) => {
 
     const getHome = () => {
         setLoading(true)
-        axios.get(`/?page=${page}&dataRangeStart=${startDate}&dataRangeEnd=${endDate}`)
+        axios.get(`/`)
             .then(res => {
+                console.log(res)
                 setData(res.data.orders)
                 setPages(Math.ceil(res.data.totalOrders / 10))
                 setLoading(false)
